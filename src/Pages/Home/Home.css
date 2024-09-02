@@ -1,0 +1,44 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden; /* Prevents horizontal overflow */
+}
+
+.homepage {
+    background-image: url('./src/assets/slide2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers content, if any, inside the homepage */
+}
+
+.headings {
+    font-size: 3vw; /* Responsive font size */
+    color: aliceblue;
+    background-color: rgba(0, 0, 0, 0.5); /* Black with 50% transparency */
+    padding: 2rem; /* Adds some padding for better readability */
+    border-radius: 5px; /* Adds rounded corners */
+    text-align: center;
+}
+
+/* Media Queries for smaller screens */
+@media (max-width: 768px) {
+    .headings {
+        font-size: 5vw; /* Increase font size slightly for better readability on smaller screens */
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .headings {
+        font-size: 7vw; /* Further increase font size for very small screens */
+        padding: 0.5rem;
+    }
+}
+

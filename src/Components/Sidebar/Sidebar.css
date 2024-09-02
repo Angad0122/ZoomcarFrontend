@@ -1,0 +1,45 @@
+Sidebar.css
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Move the sidebar completely off-screen when closed */
+    height: 100%;
+    width: 250px;
+    background-color: #111;
+    color: white;
+    transition: left 0.3s ease-in-out; /* Animate the 'left' property */
+    z-index: 1000;
+  }
+  
+  .sidebar.open {
+    left: 0; /* Bring the sidebar back into view when opened */
+  }
+  
+  .sidebar-content {
+    padding: 20px;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  /* Overlay */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0; /* Overlay starts from the left side of the screen */
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 999; /* Just below the sidebar */
+  }
+  
+  /* NavBar.css */
+  .nav-container.blurred {
+    filter: blur(5px);
+  }
+  

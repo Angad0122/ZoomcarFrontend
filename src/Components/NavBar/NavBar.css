@@ -1,0 +1,162 @@
+/* Navbar Container */
+.navbarmain {
+    background-color: #000000;
+    padding: 15px;
+}
+
+.navbarcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+}
+
+/* Hamburger Button and Logo */
+.navbarleft {
+    display: flex;
+    align-items: center;
+}
+
+.navbarhamburger {
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 10px; /* Space between hamburger and logo */
+}
+
+.navbarlogo {
+    color: #ffffff;
+    margin: 0;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Right side of Navbar */
+.navbarright {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Pushes the right section to the far right */
+    flex-wrap: nowrap; /* Prevents wrapping to keep elements in a single line */
+}
+
+/* Profile Button */
+.navbarprofile {
+    color: #ffffff;
+    font-size: 24px;
+    margin: 5px 10px;
+}
+
+/* Login/Signup or Username Button */
+.navbarloginbutton {
+    font-weight: bold;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 20px;
+}
+
+.navbarloginbutton:hover {
+    background-color: #4e4e4e;
+}
+
+.navbarbutton .dropdown-toggle {
+    font-weight: bold;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 20px;
+    background-color: transparent;
+}
+.navbarbutton.show .dropdown-toggle {
+    background-color: white;
+    color: black;
+}
+.navbarbutton .dropdown-menu {
+    background-color: rgba(255, 255, 255, 0.5); 
+    color: aliceblue;
+    border-radius: 5px;
+    box-shadow: none;
+}
+.navbarbutton .dropdown-item {
+    padding: 5px 20px;
+    font-weight : bold ;
+}
+
+
+
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbarmain {
+        padding: 10px;
+    }
+
+    .navbarhamburger {
+        font-size: 20px;
+    }
+
+    .navbarlogo {
+        font-size: 20px;
+    }
+
+    .navbarright {
+        flex-wrap: nowrap; /* Prevent wrapping */
+        justify-content: flex-end;
+    }
+
+    /* Adjustments for the Dropdown Button */
+    .navbarbutton .dropdown-toggle {
+        font-size: 15px;
+        padding: 6px 12px;
+        margin-left: 10px;
+    }
+
+    .navbarprofile {
+        font-size: 20px;
+        margin-left: 10px;
+    }
+
+    .navbarbutton .dropdown-menu {
+        font-size: 14px;
+    }
+
+    .navbarbutton .dropdown-item {
+        padding: 5px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbarhamburger {
+        font-size: 18px;
+    }
+
+    .navbarlogo {
+        font-size: 18px;
+    }
+
+    /* Further adjustments for smaller screens */
+    .navbarbutton .dropdown-toggle {
+        font-size: 10px;
+        padding: 4px 10px;
+        margin-left: 8px;
+    }
+
+    .navbarprofile {
+        font-size: 18px;
+    }
+
+    .navbarbutton .dropdown-menu {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+
+    .navbarbutton .dropdown-item {
+        padding: 4px 10px;
+    }
+}

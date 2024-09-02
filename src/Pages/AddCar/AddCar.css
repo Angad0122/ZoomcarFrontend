@@ -1,0 +1,147 @@
+/* Adjusting the form container to use Flexbox */
+.form-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+.addcarheadingdiv{
+    text-align: center;
+    margin-bottom: 10px;
+}
+.addcarheading{
+    font-weight: bold;
+}
+/* Flexbox styling for form-group pairs */
+.form-group-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Space between the two form-groups */
+}
+
+/* Flex items */
+.form-group {
+    flex: 1;
+    margin-bottom: 15px;
+}
+
+/* Label and input styling */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #000000;
+}
+
+.form-group input {
+    width: 100%; /* Full width within its flex container */
+    padding: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #495057;
+}
+
+.form-group input:focus {
+    border-color: #80bdff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+}
+
+.form-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    accent-color: #28a745; /* This sets the checkbox color in modern browsers */
+}
+
+.form-group input[type="checkbox"]:checked + label {
+    color: #28a745; /* This changes the color of the label when the checkbox is checked */
+}
+
+/* For older browsers or more control, use a custom checkbox */
+.custom-checkbox {
+    position: relative;
+    cursor: pointer;
+    padding-left: 25px;
+}
+
+.custom-checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.custom-checkbox .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 3px;
+}
+
+.custom-checkbox input[type="checkbox"]:checked ~ .checkmark {
+    background-color: #28a745;
+}
+
+.custom-checkbox .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-checkbox input[type="checkbox"]:checked ~ .checkmark:after {
+    display: block;
+}
+
+.custom-checkbox .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Button container styling */
+.button-container {
+    text-align: center;
+}
+
+.submit-button {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-group-row {
+        flex-direction: column; /* Stack form-groups vertically on small screens */
+    }
+
+    .form-container {
+        padding: 15px;
+    }
+
+    .form-group label, 
+    .form-group input {
+        font-size: 14px;
+    }
+
+    .submit-button {
+        width: 100%;
+        padding: 12px;
+    }
+}
