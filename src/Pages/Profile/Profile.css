@@ -1,70 +1,80 @@
 .profile-container {
     display: flex;
-    height: 100vh;
     overflow: hidden;
-    background-image: url('../../assets/slide2.jpg'); /* Corrected */
-    background-size: cover; /* Optional: Ensures the image covers the entire container */
-    background-position: center; /* Optional: Centers the image in the container */
-    background-repeat: no-repeat; /* Optional: Prevents the image from repeating */
+    background-image: url('../../assets/slide2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-direction: column; /* Stack sidebar and content vertically by default */
+    height: 100vh; /* Default to 100vh */
 }
 
+/* Sidebar styles */
 .sidebar {
-    width: 400px;
+    width: 100%; /* Full width on small screens */
+    max-width: 400px;
     background-color: rgba(255, 255, 255, 0.8);
-    border:solid rgba(0, 0, 0, 0.5);
+    border: solid rgba(0, 0, 0, 0.5);
     border-width: 2px;
-    margin: 20px 10px 20px 20px;
-    padding: 20px;
+    margin: 10px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-sizing: border-box; /* Ensures padding is included in width */
 }
 
-
+/* User info styles */
 .user-info {
     display: flex;
     flex-direction: column;
     align-items: center;
     background: #ffffff;
     margin-bottom: 10px;
-    height: 200px;
+    height: auto;
     max-height: 200px;
-    overflow:hidden ;
+    overflow: hidden;
     border-radius: 10px;
 }
 
 .user-info p {
     margin: 2px 0;
-    font-weight:700;
-}
-.user-info img {
-    width: 100px;
+    font-weight: 700;
 }
 
+.user-info img {
+    width: 80px; /* Adjusted for mobile */
+    height: auto;
+    border-radius: 50%;
+}
+
+/* Options styles */
 .options {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-}
+    overflow: auto; }
+
 .options hr {
     background-color: rgb(0, 0, 0); 
     border: none;            
     height: 1px;            
     margin: 2px 0;         
 }
+
 .options p {
     margin: 2px 0;
     padding: 2px 5px;
 }
+
 .options button {
     background-color: #f0f0f0;
     color: #000000;
-    margin:2px 0;
+    margin: 2px 0;
     width: 100%;
-    font-size: 16px;
+    font-size: 14px; /* Reduced font size for mobile */
     cursor: pointer;
-    display:flex;
+    display: flex;
     justify-content: space-between;
     padding: 5px;
     border-radius: 5px;
@@ -81,34 +91,60 @@
     background-color: rgba(0, 0, 0, 0.5);
     color: #ffffff;
 }
-.logoutbuttonandlogo{
+
+/* Logout button and logo styles */
+.logoutbuttonandlogo {
     display: flex;
     flex-direction: row;
 }
-.logoutlogo{
-    font-size:x-large;
+
+.logoutlogo {
+    font-size: large; /* Adjusted for mobile */
 }
 
+/* Content area styles */
 .content {
     flex-grow: 1;
     background-color: rgba(255, 255, 255, 0.8);
-    border:solid rgba(0, 0, 0, 0.5);
+    border: solid rgba(0, 0, 0, 0.5);
     border-width: 2px;
-    margin: 20px 20px 20px 10px;
-    padding: 20px;
-    overflow: hidden;
+    margin: 10px;
+    padding: 15px;
+    overflow: auto; /* Allows scrolling if content is too large */
+    box-sizing: border-box;
 }
 
+/* New CSS for mobile-specific functionality */
+.mobile-header {
+    display: none; /* Initially hidden */
+    padding: 10px;
+    text-align: center;
+    background-color: #111;
+    color: white;
+    font-size: 18px;
+}
 
+.mobile-header button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.mobile-header button:hover {
+    background-color: #333;
+}
+
+/* Media queries for different screen sizes */
 @media (min-width: 769px) {
     .profile-container {
         flex-direction: row; /* Display sidebar and content side by side on larger screens */
     }
 
     .sidebar {
-        width: 400px; /* Fixed width on larger screens */
-        height: calc(100vh - 40px); /* Full height minus margins */
-        
+        width: 300px; /* Fixed width on larger screens */
+        height: auto; /* Full height minus margins */
     }
 
     .content {
@@ -117,15 +153,40 @@
 }
 
 @media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column; /* Stack sidebar and content vertically on smaller screens */
+        overflow: hidden;
+    }
+
     .sidebar, .content {
         width: 100%; /* Full width on small screens */
         margin: 10px 5px; /* Reduce margin on small screens */
     }
-    .sidebar{
-        max-width: 200px;
+
+    .sidebar {
+        max-width: 100%; /* Ensure sidebar does not exceed screen width */
+        margin-bottom: 0;
     }
-    .profile-container {
-        flex-direction: row; 
-        overflow: hidden;
+
+    .content {
+        margin-top: 10px;
+        padding: 10px;
     }
+
+    .mobile-header {
+        display: block; /* Show mobile header */
+    }
+
+    .profile-container.hide-sidebar .sidebar {
+        display: none; /* Hide sidebar when in hide-sidebar mode */
+    }
+
+    .profile-container.hide-sidebar .content {
+        margin-top: 0; /* Adjust content margin when sidebar is hidden */
+    }
+}
+
+/* Class added for content overflow scenarios */
+body.content-overflowing .profile-container {
+    height: 100%; /* Extend height if content overflows */
 }
