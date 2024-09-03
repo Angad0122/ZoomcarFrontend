@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './AddCar.css';
 import { useUser } from '../../Contexts/AuthContext';
+import { apilink } from '../../App';
 
 const CarDetailsForm = () => {
     const { userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider, logout } = useUser()
@@ -20,13 +21,13 @@ const CarDetailsForm = () => {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         const processedValue = name === 'registrationNumber' ? value.replace(/\s/g, '') : value;
-        
+
         setCarDetails((prevDetails) => ({
             ...prevDetails,
             [name]: type === 'checkbox' ? checked : processedValue,
         }));
     };
-    
+
     const handleFileChange = (event) => {
         const files = event.target.files;
         const promises = [];
@@ -63,12 +64,16 @@ const CarDetailsForm = () => {
         };
 
         try {
-            const response = await axios.post('http://localhost:8080/car/addcar', carData);
-
+            const response = await axios.post(`${apilink}/car/addcar`, carData);
+            alert('Your car successfully uploaded')
             if (isProvider == false) {
-                setIsProvider(true)
+                try{
+                    await axios.post(`${apilink}/user/changeIsProvider`, userEmail)
+                }catch (error){
+                    console.log(error)
+                }
             }
-            console.log('Car added successfully:', response.data);
+            console.log( response.data );
 
             setCarDetails({
                 company: '',

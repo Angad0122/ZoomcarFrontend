@@ -5,6 +5,11 @@ import Home from './Pages/Home/Home';
 import { UserProvider } from './Contexts/AuthContext';
 import Profile from './Pages/Profile/Profile';
 
+
+export const apilink = 'https://zoomcarbackend-fpm1.onrender.com'
+// export const apilink = 'http://localhost:8080'
+
+
 function App() {
   return (
     <UserProvider>

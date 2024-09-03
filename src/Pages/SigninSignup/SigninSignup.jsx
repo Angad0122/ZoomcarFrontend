@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './SigninSignup.css';
 import Home from '../Home/Home';
 import { useUser } from '../../Contexts/AuthContext';
+import { apilink } from '../../App';
 
 function SigninSignup() {
 
@@ -79,7 +80,7 @@ function SigninSignup() {
         if (Object.keys(errors).length === 0) {
             setIsSubmitting(true);
             try {
-                await axios.post('http://localhost:8080/auth/signup', formData);
+                await axios.post(`${apilink}/auth/signup`, formData);
                 setEmail(formData.email);
                 setOtpOpen(true);
             } catch (error) {
@@ -105,7 +106,7 @@ function SigninSignup() {
         if (Object.keys(errors).length === 0) {
             setIsSubmitting(true);
             try {
-                const response = await axios.post('http://localhost:8080/auth/login', formData);
+                const response = await axios.post(`${apilink}/auth/login`, formData);
                 setEmail(formData.email);
                 setLoginOtp(true);
                 setOtpOpen(true);
@@ -125,7 +126,7 @@ function SigninSignup() {
     const handleOtpSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/auth/verify-otp', { email, otp });
+            const response = await axios.post(`${apilink}/auth/verify-otp`, { email, otp });
             setUserId(response.data.newUser.userId)
             setName(response.data.newUser.name)
             setUserEmail(response.data.newUser.email)
@@ -143,7 +144,7 @@ function SigninSignup() {
         event.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:8080/auth/verifyloginotp', { email, otp });
+            const response = await axios.post(`${apilink}/auth/verifyloginotp`, { email, otp });
             setUserId(response.data.userId)
             setName(response.data.name)
             setUserEmail(response.data.userEmail)

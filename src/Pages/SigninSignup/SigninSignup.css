@@ -2,7 +2,7 @@
 /* Background and Form Container */
 .loginsignupformparent {
     min-height: 100vh;
-    background-image: url('./src/assets/slide2.jpg');
+    background-image: url('../../assets/slide2.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
