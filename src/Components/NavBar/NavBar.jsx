@@ -5,7 +5,7 @@ import { useUser } from '../../Contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-// import Sidebar from '../Sidebar/Sidebar';
+import Sidebar from '../Sidebar/Sidebar';
 
 const NavBar = () => {
   const { name, logout, isProvider, setIsProvider } = useUser();
@@ -32,7 +32,7 @@ const NavBar = () => {
       <nav className="navbarmain">
         <div className="navbarcontainer">
           <div className="navbarleft">
-            <FaBars className="navbarhamburger"  />
+            <FaBars className="navbarhamburger" onClick={handleHamburgerClick}  />
             <h1 onClick={() => navigate('/')} className="navbarlogo">Zoomcar</h1>
           </div>
 
@@ -43,11 +43,11 @@ const NavBar = () => {
                 <button className="navbarloginbutton" onClick={() => { gotoprofile() }}>{name}</button>
                 {/* <div className="relative z-5" >'
                 <DropdownButton className="navbarbutton" title={name}>
-                  <Dropdown.Item onClick={providecarbutton}>Provide car</Dropdown.Item>
+                <Dropdown.Item onClick={providecarbutton}>Provide car</Dropdown.Item>
                   <hr className="m-1" />
                   <Dropdown.Item onClick={handleLogoutClick}>Logout</Dropdown.Item>
                 </DropdownButton>
-              </div> */}
+                </div> */}
               </>
             ) : (
               <button className="navbarloginbutton" onClick={handleLoginSignupClick}>Login</button>
@@ -56,7 +56,8 @@ const NavBar = () => {
           </div>
         </div>
       </nav>
-      {/* <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} /> */}
+      {isSidebarOpen && <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />}
+
     </>
   );
 };

@@ -67,7 +67,7 @@ function Profile() {
             )}
             <div className={`profile-container ${isSidebarVisible ? '' : 'hide-sidebar'}`}>
                 {isSidebarVisible && (
-                    <div className="sidebar">
+                    <div className="profile-sidebar">
                         <div className="user-info">
                             <div>
                                 <img className='profileimg' src={profileLogo} alt="Profile" />

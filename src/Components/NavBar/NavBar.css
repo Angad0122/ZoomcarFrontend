@@ -1,8 +1,9 @@
 /* Navbar Container */
 .navbarmain {
-    background-color: #000000;
+    background-color: #000;
     padding: 15px;
 }
+
 
 .navbarcontainer {
     display: flex;
@@ -85,8 +86,6 @@
     padding: 5px 20px;
     font-weight : bold ;
 }
-
-
 
 
 

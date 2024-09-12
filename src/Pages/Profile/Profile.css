@@ -1,16 +1,17 @@
 .profile-container {
     display: flex;
+    flex-direction: row; /* Stack sidebar and content vertically by default */
     overflow: hidden;
     background-image: url('../../assets/slide2.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    flex-direction: column; /* Stack sidebar and content vertically by default */
-    height: 100vh; /* Default to 100vh */
+    min-height: 100vh; /* Default to 100vh */
+    height: auto;
 }
 
 /* Sidebar styles */
-.sidebar {
+.profile-sidebar {
     width: 100%; /* Full width on small screens */
     max-width: 400px;
     background-color: rgba(255, 255, 255, 0.8);
@@ -22,6 +23,7 @@
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box; /* Ensures padding is included in width */
+    position: relative;
 }
 
 /* User info styles */
@@ -142,7 +144,7 @@
         flex-direction: row; /* Display sidebar and content side by side on larger screens */
     }
 
-    .sidebar {
+    .profile-sidebar {
         width: 300px; /* Fixed width on larger screens */
         height: auto; /* Full height minus margins */
     }
@@ -158,12 +160,12 @@
         overflow: hidden;
     }
 
-    .sidebar, .content {
+    .profile-sidebar, .content {
         width: 100%; /* Full width on small screens */
         margin: 10px 5px; /* Reduce margin on small screens */
     }
 
-    .sidebar {
+    .profile-sidebar {
         max-width: 100%; /* Ensure sidebar does not exceed screen width */
         margin-bottom: 0;
     }

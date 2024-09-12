@@ -21,60 +21,80 @@ const CarDetailsForm = () => {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         const processedValue = name === 'registrationNumber' ? value.replace(/\s/g, '') : value;
-
+    
         setCarDetails((prevDetails) => ({
             ...prevDetails,
             [name]: type === 'checkbox' ? checked : processedValue,
         }));
     };
+    
+
 
     const handleFileChange = (event) => {
         const files = event.target.files;
+    
+        if (files.length > 5) {
+            alert('You can only upload up to 5 images.');
+            event.target.value = ''; // Clear the file input field to prevent further processing
+            return; // Prevent further processing
+        }
+    
         const promises = [];
-
+    
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const reader = new FileReader();
-
-            promises.push(new Promise((resolve, reject) => {
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            }));
+    
+            promises.push(
+                new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                })
+            );
         }
+    
         Promise.all(promises)
-            .then(base64Images => {
+            .then((base64Images) => {
                 setCarDetails((prevDetails) => ({
                     ...prevDetails,
                     images: base64Images,
                 }));
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error("Error reading files", error);
             });
-    }
+    };
+    
+    
 
 
     const handleCarSubmit = async (event) => {
         event.preventDefault();
-
+    
+        const registrationNumberRegex = /^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$/;
+        if (!registrationNumberRegex.test(carDetails.registrationNumber)) {
+            alert('Invalid registration number format. It should be in the format MP09AB0001.');
+            return;
+        }
+    
         const carData = {
             ...carDetails,
             userEmail
         };
-
+    
         try {
             const response = await axios.post(`${apilink}/car/addcar`, carData);
-            alert('Your car successfully uploaded')
-            if (isProvider == false) {
-                try{
-                    await axios.post(`${apilink}/user/changeIsProvider`, userEmail)
-                }catch (error){
-                    console.log(error)
+            alert('Your car successfully uploaded');
+            
+            if (!isProvider) {
+                try {
+                    await axios.post(`${apilink}/user/changeIsProvider`, userEmail);
+                } catch (error) {
+                    console.log(error);
                 }
             }
-            console.log( response.data );
-
+    
             setCarDetails({
                 company: '',
                 model: '',
@@ -98,7 +118,7 @@ const CarDetailsForm = () => {
             }
         }
     };
-
+    
 
     return (
         <>
@@ -185,9 +205,10 @@ const CarDetailsForm = () => {
                                 value={carDetails.registrationNumber}
                                 onChange={handleChange}
                                 required
-                                pattern="\S+"
-                                title="No spaces allowed"
+                                pattern="^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$"
+                                title="Registration number should be in the format MP09AB0001"
                             />
+
                         </div>
 
                     </div>
