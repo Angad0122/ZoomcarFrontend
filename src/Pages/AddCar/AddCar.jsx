@@ -21,30 +21,30 @@ const CarDetailsForm = () => {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         const processedValue = name === 'registrationNumber' ? value.replace(/\s/g, '') : value;
-    
+
         setCarDetails((prevDetails) => ({
             ...prevDetails,
             [name]: type === 'checkbox' ? checked : processedValue,
         }));
     };
-    
+
 
 
     const handleFileChange = (event) => {
         const files = event.target.files;
-    
+
         if (files.length > 5) {
             alert('You can only upload up to 5 images.');
             event.target.value = ''; // Clear the file input field to prevent further processing
             return; // Prevent further processing
         }
-    
+
         const promises = [];
-    
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const reader = new FileReader();
-    
+
             promises.push(
                 new Promise((resolve, reject) => {
                     reader.onload = () => resolve(reader.result);
@@ -53,7 +53,7 @@ const CarDetailsForm = () => {
                 })
             );
         }
-    
+
         Promise.all(promises)
             .then((base64Images) => {
                 setCarDetails((prevDetails) => ({
@@ -65,36 +65,51 @@ const CarDetailsForm = () => {
                 console.error("Error reading files", error);
             });
     };
-    
-    
+
+
 
 
     const handleCarSubmit = async (event) => {
         event.preventDefault();
-    
+
         const registrationNumberRegex = /^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$/;
         if (!registrationNumberRegex.test(carDetails.registrationNumber)) {
             alert('Invalid registration number format. It should be in the format MP09AB0001.');
             return;
         }
-    
+
         const carData = {
             ...carDetails,
             userEmail
         };
-    
+
         try {
             const response = await axios.post(`${apilink}/car/addcar`, carData);
             alert('Your car successfully uploaded');
-            
+            console.log(isProvider)
+
             if (!isProvider) {
+                const token = localStorage.getItem('selfsteerAuthToken'); // Or however you're storing the token
                 try {
-                    await axios.post(`${apilink}/user/changeIsProvider`, userEmail);
+                    const responseofprovidercahnge = await axios.post(
+                        `${apilink}/user/changeIsProvider`,
+                        { email: userEmail },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        }
+                    );
+                    console.log('Provider status changed:', responseofprovidercahnge.data);
                 } catch (error) {
-                    console.log(error);
+                    if (error.response) {
+                        console.log('Server error response:', error.response.data);
+                    } else {
+                        console.log('Client-side error:', error.message);
+                    }
                 }
             }
-    
+
             setCarDetails({
                 company: '',
                 model: '',
@@ -118,7 +133,7 @@ const CarDetailsForm = () => {
             }
         }
     };
-    
+
 
     return (
         <>

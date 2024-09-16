@@ -80,7 +80,9 @@ function SigninSignup() {
         if (Object.keys(errors).length === 0) {
             setIsSubmitting(true);
             try {
-                await axios.post(`${apilink}/auth/signup`, formData);
+                await axios.post(`${apilink}/auth/signup`, formData, {
+                    withCredentials: true
+                });
                 setEmail(formData.email);
                 setOtpOpen(true);
             } catch (error) {
@@ -94,26 +96,37 @@ function SigninSignup() {
 
     const handleLoginSubmit = async (event) => {
         event.preventDefault();
-
+    
         const formData = {
             email: event.target.exampleInputEmail1.value,
             password: event.target.exampleInputPassword1.value,
         };
-
+    
         const errors = validateLogin(formData);
         setFormErrors(errors);
-
+    
         if (Object.keys(errors).length === 0) {
             setIsSubmitting(true);
             try {
-                const response = await axios.post(`${apilink}/auth/login`, formData);
+                const response = await axios.post(`${apilink}/auth/login`, formData, {
+                    withCredentials: true
+                });
+    
+                // If the login request is successful
                 setEmail(formData.email);
                 setLoginOtp(true);
                 setOtpOpen(true);
             } catch (error) {
+                console.error("Error during login:", error);  // Log the full error for debugging
+    
+                // Improved error handling
                 if (error.response && error.response.data && error.response.data.error) {
                     alert(error.response.data.error);
+                } else if (error.response) {
+                    // Handle HTTP errors like 4xx or 5xx that might not have a proper error message
+                    alert(`Error: ${error.response.status} - ${error.response.statusText}`);
                 } else {
+                    // Handle unexpected errors (network issues, etc.)
                     alert("An unexpected error occurred. Please try again later.");
                 }
             } finally {
@@ -121,12 +134,15 @@ function SigninSignup() {
             }
         }
     };
+    
 
 
     const handleOtpSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`${apilink}/auth/verify-otp`, { email, otp });
+            const response = await axios.post(`${apilink}/auth/verify-otp`, { email, otp }, {
+                withCredentials: true
+            });
             setUserId(response.data.newUser.userId)
             setName(response.data.newUser.name)
             setUserEmail(response.data.newUser.email)
@@ -144,7 +160,9 @@ function SigninSignup() {
         event.preventDefault();
 
         try {
-            const response = await axios.post(`${apilink}/auth/verifyloginotp`, { email, otp });
+            const response = await axios.post(`${apilink}/auth/verifyloginotp`, { email, otp }, {
+                withCredentials: true
+            });
             setUserId(response.data.userId)
             setName(response.data.name)
             setUserEmail(response.data.userEmail)

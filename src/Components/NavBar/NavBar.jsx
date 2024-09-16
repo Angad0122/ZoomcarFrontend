@@ -33,7 +33,7 @@ const NavBar = () => {
         <div className="navbarcontainer">
           <div className="navbarleft">
             <FaBars className="navbarhamburger" onClick={handleHamburgerClick}  />
-            <h1 onClick={() => navigate('/')} className="navbarlogo">Zoomcar</h1>
+            <h1 onClick={() => navigate('/')} className="navbarlogo">SELFSTEER</h1>
           </div>
 
           {/* Right Side of Navbar */}
