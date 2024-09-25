@@ -82,7 +82,7 @@ const CarDetailsForm = () => {
             ...carDetails,
             userEmail
         };
-
+2
         try {
             const response = await axios.post(`${apilink}/car/addcar`, carData);
             alert('Your car successfully uploaded');

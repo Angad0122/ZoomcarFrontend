@@ -112,21 +112,18 @@ function SigninSignup() {
                     withCredentials: true
                 });
     
-                // If the login request is successful
+                
                 setEmail(formData.email);
                 setLoginOtp(true);
                 setOtpOpen(true);
             } catch (error) {
-                console.error("Error during login:", error);  // Log the full error for debugging
+                console.error("Error during login:", error); 
     
-                // Improved error handling
                 if (error.response && error.response.data && error.response.data.error) {
                     alert(error.response.data.error);
                 } else if (error.response) {
-                    // Handle HTTP errors like 4xx or 5xx that might not have a proper error message
                     alert(`Error: ${error.response.status} - ${error.response.statusText}`);
                 } else {
-                    // Handle unexpected errors (network issues, etc.)
                     alert("An unexpected error occurred. Please try again later.");
                 }
             } finally {
@@ -163,6 +160,10 @@ function SigninSignup() {
             const response = await axios.post(`${apilink}/auth/verifyloginotp`, { email, otp }, {
                 withCredentials: true
             });
+            if (response.data.authtoken) {
+                const encryptedToken = response.data.authtoken;
+                localStorage.setItem('selfsteerAuthToken', encryptedToken);
+            }
             setUserId(response.data.userId)
             setName(response.data.name)
             setUserEmail(response.data.userEmail)
