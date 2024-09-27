@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './AddCar.css';
 import { useUser } from '../../Contexts/AuthContext';
-import { apilink } from '../../App';
 
 const CarDetailsForm = () => {
     const { userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider, logout } = useUser()
@@ -84,7 +83,7 @@ const CarDetailsForm = () => {
         };
 2
         try {
-            const response = await axios.post(`${apilink}/car/addcar`, carData);
+            const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/addcar`, carData);
             alert('Your car successfully uploaded');
             console.log(isProvider)
 
@@ -92,7 +91,7 @@ const CarDetailsForm = () => {
                 const token = localStorage.getItem('selfsteerAuthToken'); // Or however you're storing the token
                 try {
                     const responseofprovidercahnge = await axios.post(
-                        `${apilink}/user/changeIsProvider`,
+                        `${import.meta.env.VITE_APILINK}/user/changeIsProvider`,
                         { email: userEmail },
                         {
                             headers: {

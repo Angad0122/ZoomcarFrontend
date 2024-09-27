@@ -3,7 +3,6 @@ import NavBar from '../../Components/NavBar/NavBar'
 import { useUser } from '../../Contexts/AuthContext'
 import './Home.css'
 import CarCard from '../../Components/CarCard/CarCard'
-import { apilink } from '../../App'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 

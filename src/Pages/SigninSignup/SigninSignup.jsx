@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './SigninSignup.css';
-import Home from '../Home/Home';
 import { useUser } from '../../Contexts/AuthContext';
-import { apilink } from '../../App';
 
 function SigninSignup() {
 
@@ -80,7 +78,7 @@ function SigninSignup() {
         if (Object.keys(errors).length === 0) {
             setIsSubmitting(true);
             try {
-                await axios.post(`${apilink}/auth/signup`, formData, {
+                await axios.post(`${import.meta.env.VITE_APILINK}/auth/signup`, formData, {
                     withCredentials: true
                 });
                 setEmail(formData.email);
@@ -108,7 +106,7 @@ function SigninSignup() {
         if (Object.keys(errors).length === 0) {
             setIsSubmitting(true);
             try {
-                const response = await axios.post(`${apilink}/auth/login`, formData, {
+                const response = await axios.post(`${import.meta.env.VITE_APILINK}/auth/login`, formData, {
                     withCredentials: true
                 });
     
@@ -137,9 +135,28 @@ function SigninSignup() {
     const handleOtpSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`${apilink}/auth/verify-otp`, { email, otp }, {
+            const response = await axios.post(`${import.meta.env.VITE_APILINK}/auth/verify-otp`, { email, otp }, {
                 withCredentials: true
             });
+
+            if (response.data.authtoken) {
+                const encryptedToken = response.data.authtoken;
+    
+                // Create a userData object
+                const userData = {
+                    userId: response.data.newUser.userId,
+                    name: response.data.newUser.name,
+                    email: response.data.newUser.userEmail,
+                    phone: response.data.newUser.phone,
+                    city: response.data.newUser.city,
+                    gender: response.data.newUser.gender,
+                    isProvider: response.data.newUser.isProvider
+                };
+    
+                // Save userData and token to localStorage
+                localStorage.setItem('userData', JSON.stringify(userData)); // Serialize the userData object
+                localStorage.setItem('selfsteerAuthToken', encryptedToken);
+            }
             setUserId(response.data.newUser.userId)
             setName(response.data.newUser.name)
             setUserEmail(response.data.newUser.email)
@@ -155,28 +172,52 @@ function SigninSignup() {
     };
     const handleLoginOtpSubmit = async (event) => {
         event.preventDefault();
-
+    
         try {
-            const response = await axios.post(`${apilink}/auth/verifyloginotp`, { email, otp }, {
-                withCredentials: true
-            });
+            const response = await axios.post(
+                `${import.meta.env.VITE_APILINK}/auth/verifyloginotp`, 
+                { email, otp }, 
+                { withCredentials: true }
+            );
+    
             if (response.data.authtoken) {
                 const encryptedToken = response.data.authtoken;
+    
+                // Create a userData object
+                const userData = {
+                    userId: response.data.userId,
+                    name: response.data.name,
+                    email: response.data.userEmail,
+                    phone: response.data.phone,
+                    city: response.data.city,
+                    gender: response.data.gender,
+                    isProvider: response.data.isProvider
+                };
+    
+                // Save userData and token to localStorage
+                localStorage.setItem('userData', JSON.stringify(userData)); // Serialize the userData object
                 localStorage.setItem('selfsteerAuthToken', encryptedToken);
             }
-            setUserId(response.data.userId)
-            setName(response.data.name)
-            setUserEmail(response.data.userEmail)
-            setPhone(response.data.phone)
-            setCity(response.data.city)
-            setGender(response.data.gender)
-            setIsProvider(response.data.isProvider)
-            navigate('/')
-            console.log(name, userEmail, phone, city, gender, isProvider);
+    
+            // Update the context or state variables with user information
+            setUserId(response.data.userId);
+            setName(response.data.name);
+            setUserEmail(response.data.userEmail);
+            setPhone(response.data.phone);
+            setCity(response.data.city);
+            setGender(response.data.gender);
+            setIsProvider(response.data.isProvider);
+    
+            // Navigate to the home page or dashboard after successful login
+            navigate('/');
+    
+            console.log(response.data.message, name, userEmail, phone, city, gender, isProvider);
+    
         } catch (error) {
             setOtpErrors({ otp: 'Invalid or expired OTP' });
         }
     };
+    
 
 
 

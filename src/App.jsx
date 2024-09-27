@@ -4,11 +4,7 @@ import SigninSignup from './Pages/SigninSignup/SigninSignup';
 import Home from './Pages/Home/Home';
 import { UserProvider } from './Contexts/AuthContext';
 import Profile from './Pages/Profile/Profile';
-
-
-// export const apilink = 'https://zoomcarbackend-fpm1.onrender.com'
-export const apilink = 'http://localhost:8080'
-
+import PrivateRoute from './Components/PrivateRoute';
 
 function App() {
   return (
@@ -17,12 +13,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<SigninSignup />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route  element = {<PrivateRoute/>} >
+            <Route path="/profile" element={<Profile/>}/>
+          </Route>
         </Routes>
       </Router>
     </UserProvider>
-
-
   );
 }
 
