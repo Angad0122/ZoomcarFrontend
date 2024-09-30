@@ -1,11 +1,13 @@
+/* General card styling */
 .card {
     margin: 10px;
-    width: 320px;
+    width: 295px;
     height: 350px;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 5px solid;
-    position: relative; /* Make sure card is relative to position buttons in the image */
+    position: relative;
+    transition: width 0.3s, height 0.3s; /* Smooth transition when resizing */
 }
 
 .card-image {
@@ -13,7 +15,8 @@
     overflow: hidden;
     background-image: url("../../assets/slide2.jpg");
     background-size: cover;
-    position: relative; /* Relative position to place buttons inside it */
+    position: relative;
+    transition: height 0.3s; /* Smooth transition for height */
 }
 
 /* Favourite button */
@@ -71,7 +74,10 @@
     max-width: 60%;
     padding: 5px;
 }
-
+.card-desc-left-text{
+    display: flex;
+    flex-direction: row;
+}
 .card-desc-left-hr {
     background-color: rgb(0, 0, 0);
     border: none;
@@ -89,4 +95,101 @@
     display: flex;
     flex-direction: row;
     justify-content: end;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .card {
+        width: 220px; /* Reduce width to maintain ratio */
+        height: 260px; /* Adjust height proportionally */
+    }
+
+    .card-image {
+        height: 150px; /* Adjust image height */
+    }
+
+    .favourite-btn {
+        top: 8px;
+        right: 8px;
+        font-size: 14px; /* Reduce button size */
+        padding: 4px;
+    }
+
+    .availability-circle {
+        width: 8px;
+        height: 8px; /* Reduce size */
+    }
+
+    .ratings {
+        padding: 4px 8px;
+        font-size: 12px; /* Reduce text size */
+    }
+
+    .card-desc {
+        height: 110px; /* Reduce description height */
+    }
+
+    .card-desc-left {
+        width: 60%;
+        padding: 4px;
+    }
+
+    .card-desc-left-text{
+        font-size: 12px;
+    }
+    .card-desc-right {
+        width: 40%;
+        padding: 4px;
+    }
+
+    .card-desc-right-putatend {
+        font-size: 12px; /* Reduce font size */
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        width: 180px; /* Further reduce width */
+        height: 220px; /* Adjust height */
+    }
+
+    .card-image {
+        height: 120px; /* Adjust image height */
+    }
+
+    .favourite-btn {
+        top: 5px;
+        right: 5px;
+        font-size: 12px; /* Reduce button size */
+        padding: 3px;
+    }
+
+    .availability-circle {
+        width: 6px;
+        height: 6px; /* Further reduce size */
+    }
+
+    .ratings {
+        padding: 3px 6px;
+        font-size: 10px; /* Further reduce text size */
+    }
+
+    .card-desc {
+        height: 90px; /* Further reduce description height */
+    }
+
+    .card-desc-left {
+        padding: 3px;
+    }
+
+    .card-desc-left-text{
+        font-size: 10px;
+    }
+    .card-desc-right {
+        padding: 3px;
+    }
+
+    .card-desc-right-putatend {
+        font-size: 10px; /* Reduce font size */
+    }
 }

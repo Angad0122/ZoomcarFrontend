@@ -4,7 +4,8 @@ import './AddCar.css';
 import { useUser } from '../../Contexts/AuthContext';
 
 const CarDetailsForm = () => {
-    const { userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider, logout } = useUser()
+    const { userEmail, isProvider, setIsProvider } = useUser();
+
     const [carDetails, setCarDetails] = useState({
         company: '',
         model: '',
@@ -15,6 +16,7 @@ const CarDetailsForm = () => {
         registrationNumber: '',
         availability: true,
         images: [],
+        carType: '',  // Added carType to state
     });
 
     const handleChange = (e) => {
@@ -26,8 +28,6 @@ const CarDetailsForm = () => {
             [name]: type === 'checkbox' ? checked : processedValue,
         }));
     };
-
-
 
     const handleFileChange = (event) => {
         const files = event.target.files;
@@ -65,9 +65,6 @@ const CarDetailsForm = () => {
             });
     };
 
-
-
-
     const handleCarSubmit = async (event) => {
         event.preventDefault();
 
@@ -81,16 +78,16 @@ const CarDetailsForm = () => {
             ...carDetails,
             userEmail
         };
-2
+
         try {
             const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/addcar`, carData);
             alert('Your car successfully uploaded');
-            console.log(isProvider)
+            console.log(response.data.car);
 
             if (!isProvider) {
-                const token = localStorage.getItem('selfsteerAuthToken'); // Or however you're storing the token
+                const token = localStorage.getItem('selfsteerAuthToken'); 
                 try {
-                    const responseofprovidercahnge = await axios.post(
+                    const responseOfProviderChange = await axios.post(
                         `${import.meta.env.VITE_APILINK}/user/changeIsProvider`,
                         { email: userEmail },
                         {
@@ -99,7 +96,7 @@ const CarDetailsForm = () => {
                             }
                         }
                     );
-                    console.log('Provider status changed:', responseofprovidercahnge.data);
+                    console.log('Provider status changed:', responseOfProviderChange.data);
                 } catch (error) {
                     if (error.response) {
                         console.log('Server error response:', error.response.data);
@@ -119,6 +116,7 @@ const CarDetailsForm = () => {
                 registrationNumber: '',
                 availability: true,
                 images: [],
+                carType: '',  // Reset carType field
             });
         } catch (error) {
             if (error.response) {
@@ -133,129 +131,146 @@ const CarDetailsForm = () => {
         }
     };
 
-
     return (
-        <>
-            <div className="form-container">
-                <div className='addcarheadingdiv'>
-                    <h1 className='addcarheading'>Add a New Car</h1>
-                </div>
-                <form onSubmit={handleCarSubmit}>
-                    <div className="form-group-row">
-                        <div className="form-group">
-                            <label>Company:</label>
-                            <input
-                                type="text"
-                                name="company"
-                                value={carDetails.company}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Model:</label>
-                            <input
-                                type="text"
-                                name="model"
-                                value={carDetails.model}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-group-row">
-                        <div className="form-group">
-                            <label>Year:</label>
-                            <input
-                                type="number"
-                                name="year"
-                                value={carDetails.year}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Price per Hour:</label>
-                            <input
-                                type="number"
-                                name="pricePerHour"
-                                value={carDetails.pricePerHour}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-group-row">
-                        <div className="form-group">
-                            <label>Price per Day:</label>
-                            <input
-                                type="number"
-                                name="pricePerDay"
-                                value={carDetails.pricePerDay}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Location:</label>
-                            <input
-                                type="text"
-                                name="location"
-                                value={carDetails.location}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-group-row">
-                        <div className="form-group ">
-                            <label>Registration Number:</label>
-                            <input
-                                type="text"
-                                name="registrationNumber"
-                                value={carDetails.registrationNumber}
-                                onChange={handleChange}
-                                required
-                                pattern="^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$"
-                                title="Registration number should be in the format MP09AB0001"
-                            />
-
-                        </div>
-
-                    </div>
-                    <div className="form-group custom-checkbox">
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="availability"
-                                checked={carDetails.availability}
-                                onChange={handleChange}
-                            />
-                            <span className="checkmark"></span>
-                            <label>Available</label>
-                        </label>
-                    </div>
+        <div className="form-container">
+            <div className='addcarheadingdiv'>
+                <h1 className='addcarheading'>Add a New Car</h1>
+            </div>
+            <form onSubmit={handleCarSubmit}>
+                {/* Other input fields... */}
+                
+                <div className="form-group-row">
                     <div className="form-group">
-                        <label>Images:</label>
+                        <label>Company:</label>
                         <input
-                            type="file"
-                            name="images"
-                            multiple
-                            onChange={handleFileChange}
+                            type="text"
+                            name="company"
+                            value={carDetails.company}
+                            onChange={handleChange}
+                            required
                         />
                     </div>
-                    <div className="button-container">
-                        <button type="submit" className="submit-button">
-                            Submit
-                        </button>
+                    <div className="form-group">
+                        <label>Model:</label>
+                        <input
+                            type="text"
+                            name="model"
+                            value={carDetails.model}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
-                </form>
-            </div>
-        </>
+                </div>
 
+                {/* Car Type and Year in the same row */}
+                <div className="form-group-row">
+                    <div className="form-group">
+                        <label>Year:</label>
+                        <input
+                            type="number"
+                            name="year"
+                            value={carDetails.year}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Car Type:</label>
+                        <select
+                            name="carType"
+                            value={carDetails.carType}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">Select Car Type</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Hatchback">Hatchback</option>
+                            <option value="Pickup-Truck">Pickup-Truck</option>
+                            <option value="Convertible">Convertible</option>
+                            <option value="Sports">Sports</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="form-group-row">
+                    <div className="form-group">
+                        <label>Registration Number:</label>
+                        <input
+                            type="text"
+                            name="registrationNumber"
+                            value={carDetails.registrationNumber}
+                            onChange={handleChange}
+                            required
+                            pattern="^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$"
+                            title="Registration number should be in the format MP09AB0001"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Location:</label>
+                        <input
+                            type="text"
+                            name="location"
+                            value={carDetails.location}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="form-group-row">
+                    <div className="form-group">
+                        <label>Price per Hour:</label>
+                        <input
+                            type="number"
+                            name="pricePerHour"
+                            value={carDetails.pricePerHour}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Price per Day:</label>
+                        <input
+                            type="number"
+                            name="pricePerDay"
+                            value={carDetails.pricePerDay}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="form-group custom-checkbox">
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="availability"
+                            checked={carDetails.availability}
+                            onChange={handleChange}
+                        />
+                        <span className="checkmark"></span>
+                        Available
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label>Images:</label>
+                    <input
+                        type="file"
+                        name="images"
+                        multiple
+                        onChange={handleFileChange}
+                    />
+                </div>
+
+                <div className="button-container">
+                    <button type="submit" className="submit-button">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
     );
 };
 

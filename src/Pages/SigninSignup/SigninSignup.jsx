@@ -187,7 +187,7 @@ function SigninSignup() {
                 const userData = {
                     userId: response.data.userId,
                     name: response.data.name,
-                    email: response.data.userEmail,
+                    userEmail: response.data.userEmail,
                     phone: response.data.phone,
                     city: response.data.city,
                     gender: response.data.gender,

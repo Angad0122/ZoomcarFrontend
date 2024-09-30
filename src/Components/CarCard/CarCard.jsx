@@ -17,17 +17,17 @@ function CarCard() {
                 <div className='card-desc'>
                     <div className='card-desc-left'>
                         <div>
-                            <h2>Car Company</h2>
+                            <h2 className='card-desc-left-text'>Car Company</h2>
                         </div>
                         <div>
-                            <h3>Car model</h3>
+                            <h3 className='card-desc-left-text'>Car model</h3>
                         </div>
                         <div>
-                            <h3>Car year</h3>
+                            <h3 className='card-desc-left-text'>Car year</h3>
                         </div>
                         <hr className='card-desc-left-hr' />
                         <div>
-                            <h4>Car Location</h4>
+                            <h4 className='card-desc-left-text'>Car Location</h4>
                         </div>
                     </div>
                     {/* ----------*/}

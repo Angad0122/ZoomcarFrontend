@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import './Profile.css';
-import NavBar from '../../Components/NavBar/NavBar';
+import React, { useEffect, useState } from 'react'
+import './ProviderPanel.css'
+
+import NavBar from '../../Components/NavBar/NavBar'
 import { useUser } from '../../Contexts/AuthContext';
 import profileLogo from '../../assets/profilelogo.jpg';
 import { MdExitToApp } from "react-icons/md";
-import CarDetailsForm from '../AddCar/AddCar';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import ProviderYourCars from '../../Components/ProviderYourCars/ProviderYourCars';
+function ProviderPanel() {
 
-function Profile() {
+
     const { userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider, logout } = useUser();
     const [selectedOption, setSelectedOption] = useState('ShowProfile');
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Check if the screen is mobile-sized
@@ -57,10 +59,13 @@ function Profile() {
         setIsSidebarVisible(!isSidebarVisible);
     };
 
+
+
+
     return (
         <>
-            <NavBar />
-            {isMobile && (
+        <NavBar/>
+        {isMobile && (
                 <div className="mobile-header">
                     <button onClick={toggleSidebar}>Menu</button>
                 </div>
@@ -77,13 +82,7 @@ function Profile() {
                             <p>{phone}</p>
                         </div>
                         <div className="options">
-                            <hr />
-                            <div>
-                                <p>Profile Document</p>
-                                <p>Mobile Number</p>
-                                <p>Payment Wallet</p>
-                            </div>
-                            <hr />
+                            
                             <button
                                 className={selectedOption === 'ShowProfile' ? 'active' : ''}
                                 onClick={() => handleOptionClick('ShowProfile')}
@@ -91,39 +90,39 @@ function Profile() {
                                 Profile
                             </button>
                             <hr />
-                            {isProvider ? (
-                                <>
-                                    <button
-                                        className={selectedOption === 'ProvideCar' ? 'active' : ''}
-                                        onClick={() => navigate('/provider-profile')}
-                                    >
-                                        Provider Panel
-                                    </button>
-
-                                </>
-                            ) : (
-                                <>
-                                    <button
-                                        className={selectedOption === 'ProvideCar' ? 'active' : ''}
-                                        onClick={() => handleOptionClick('ProvideCar')}
-                                    >
-                                        Provide Car
-                                    </button>
-                                </>
-                            )}
-                            <hr />
                             <button
-                                className={selectedOption === 'Bookings' ? 'active' : ''}
-                                onClick={() => handleOptionClick('Bookings')}
+                                className={selectedOption === 'YourCars' ? 'active' : ''}
+                                onClick={() => handleOptionClick('YourCars')}
                             >
-                                My Bookings
+                                Your Cars
                             </button>
                             <hr />
                             <button
-                                className={selectedOption === 'SavedCars' ? 'active' : ''}
-                                onClick={() => handleOptionClick('SavedCars')}
+                                className={selectedOption === 'ActiveBookings' ? 'active' : ''}
+                                onClick={() => handleOptionClick('ActiveBookings')}
                             >
-                                Saved Cars
+                                Active Bookings
+                            </button>
+                            <hr />
+                            <button
+                                className={selectedOption === 'BookingRequests' ? 'active' : ''}
+                                onClick={() => handleOptionClick('BookingRequests')}
+                            >
+                                Booking Requests
+                            </button>
+                            <hr />
+                            <button
+                                className={selectedOption === 'BookingHistory' ? 'active' : ''}
+                                onClick={() => handleOptionClick('BookingHistory')}
+                            >
+                                Booking History
+                            </button>
+                            <hr />
+                            <button
+                                className={selectedOption === 'Earnings' ? 'active' : ''}
+                                onClick={() => handleOptionClick('Earnings')}
+                            >
+                                Earnings
                             </button>
                             <hr />
                             <button className='text-black font-bold' onClick={() => logoutandgotohome()}>
@@ -136,13 +135,16 @@ function Profile() {
                 )}
                 <div className="content">
                     {selectedOption === 'ShowProfile' && <div>Your Profile</div>}
-                    {selectedOption === 'ProvideCar' && <div><CarDetailsForm /></div>}
-                    {selectedOption === 'Bookings' && <div>Bookings</div>}
-                    {selectedOption === 'SavedCars' && <div>SavedCars</div>}
+                    {selectedOption === 'YourCars' && <div><ProviderYourCars /></div>}
+                    {selectedOption === 'ActiveBookings' && <div>ActiveBookings</div>}
+                    {selectedOption === 'BookingRequests' && <div>Booking Requests</div>}
+                    {selectedOption === 'BookingHistory' && <div>Booking History</div>}
+                    {selectedOption === 'Earnings' && <div>Earnings</div>}
                 </div>
             </div>
+
         </>
-    );
+    )
 }
 
-export default Profile;
+export default ProviderPanel
