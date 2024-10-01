@@ -6,6 +6,7 @@ import profileLogo from '../../assets/profilelogo.jpg';
 import { MdExitToApp } from "react-icons/md";
 import CarDetailsForm from '../AddCar/AddCar';
 import { Navigate, useNavigate } from 'react-router-dom';
+import UserMyAccount from '../../Components/UserMyAccount/UserMyAccount';
 
 function Profile() {
     const { userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider, logout } = useUser();
@@ -135,7 +136,7 @@ function Profile() {
                     </div>
                 )}
                 <div className="content">
-                    {selectedOption === 'ShowProfile' && <div>Your Profile</div>}
+                    {selectedOption === 'ShowProfile' && <div><UserMyAccount/></div>}
                     {selectedOption === 'ProvideCar' && <div><CarDetailsForm /></div>}
                     {selectedOption === 'Bookings' && <div>Bookings</div>}
                     {selectedOption === 'SavedCars' && <div>SavedCars</div>}

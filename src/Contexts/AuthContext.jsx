@@ -54,8 +54,7 @@ export const UserProvider = ({ children }) => {
 
             if (encryptedToken) {
                 try {
-                    const response = await axios.post(
-                        `${import.meta.env.VITE_APILINK}/user/verifytoken`,
+                    const response = await axios.post(`${import.meta.env.VITE_APILINK}/user/verifytoken`,
                         { encryptedToken },
                         { withCredentials: true }
                     );

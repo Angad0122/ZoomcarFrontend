@@ -1,0 +1,72 @@
+.MyAccountCotainer{
+    padding: 20px;
+}
+.MyAccountHeadingDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.MyAccountHeading{
+    margin: 10px;
+    font-size: 24px;
+}
+
+.accountInfo{
+    height: 200px;
+}
+.accountInfo hr{
+    background-color: rgb(0, 0, 0); 
+    border: none;            
+    height: 3px;            
+    margin: 10px 0; 
+}
+
+
+
+
+.personalDetails{
+    height: 200px;
+}
+
+.personalDetails hr{
+    background-color: rgb(0, 0, 0); 
+    border: none;            
+    height: 3px;            
+    margin: 10px 0; 
+
+}
+
+
+.labelandvalue{
+    display: flex;  
+    margin: 10px; 
+}
+
+.label{
+    margin: 5px;
+}
+.input{
+    margin-left: 5px;
+    padding-left: 10px;
+    border-radius:7px;
+    border: solid rgba(0, 0, 0);
+    border-width: 1px;
+}
+.value{
+    margin: 5px;
+}
+
+
+.updateButtonDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.updatebtn{
+    border-color: black;
+    border-width: 1px;
+    padding: 5px 20px;
+}
