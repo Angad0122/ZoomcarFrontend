@@ -130,10 +130,10 @@ const CarDetailsForm = () => {
                 const token = localStorage.getItem('selfsteerAuthToken');
                 await axios.post(
                     `${import.meta.env.VITE_APILINK}/user/changeIsProvider`,
-                    { email: userEmail },
-                    {
-                        headers: { Authorization: `Bearer ${token}` }
-                    }
+                    { email: userEmail,
+                      encryptedToken :token
+                    },
+                    
                 );
             }
     
