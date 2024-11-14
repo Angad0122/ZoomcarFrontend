@@ -6,7 +6,8 @@ import { useUser } from '../../Contexts/AuthContext';
 
 function SigninSignup() {
 
-    const { userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider, logout } = useUser()
+    const { userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider,
+        carsProvided, setCarsProvided, logout } = useUser()
 
     const [signUpOpen, setSignUpOpen] = useState(false);
     const [formErrors, setFormErrors] = useState({});
@@ -123,6 +124,8 @@ function SigninSignup() {
                     alert(`Error: ${error.response.status} - ${error.response.statusText}`);
                 } else {
                     alert("An unexpected error occurred. Please try again later.");
+                    console.log(error);
+                    
                 }
             } finally {
                 setIsSubmitting(false);
@@ -191,7 +194,8 @@ function SigninSignup() {
                     phone: response.data.phone,
                     city: response.data.city,
                     gender: response.data.gender,
-                    isProvider: response.data.isProvider
+                    isProvider: response.data.isProvider,
+                    carsProvided:response.data.carsProvided
                 };
     
                 // Save userData and token to localStorage
@@ -207,6 +211,8 @@ function SigninSignup() {
             setCity(response.data.city);
             setGender(response.data.gender);
             setIsProvider(response.data.isProvider);
+            setCarsProvided(response.data.carsProvided)
+
     
             // Navigate to the home page or dashboard after successful login
             navigate('/');

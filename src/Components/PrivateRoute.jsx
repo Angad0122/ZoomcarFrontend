@@ -6,7 +6,7 @@ import axios from 'axios';
 const PrivateRoute = () => {
     const {
         userId, // Get userId from context
-        setUserId, setName, setUserEmail, setPhone, setCity, setGender, setIsProvider, logout
+        setUserId, setName, setUserEmail, setPhone, setCity, setGender, setIsProvider, carsProvided, setCarsProvided, logout
     } = useUser();
     
     const [tokenVerified, setTokenVerified] = useState(null); // null: not verified, true: valid, false: invalid
@@ -41,6 +41,7 @@ const PrivateRoute = () => {
                                 setCity(userData.city);
                                 setGender(userData.gender);
                                 setIsProvider(userData.isProvider);
+                                setCarsProvided(userData.carsProvided);
                                 console.log("User data loaded by PrivateRoute from localStorage", userData);
                             }
                         }

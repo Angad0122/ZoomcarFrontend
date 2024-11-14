@@ -10,6 +10,7 @@ export const UserContext = createContext({
     city: '',
     gender: '',
     isProvider: false,
+    carsProvided:[],
     logout: () => { }
 });
 
@@ -21,6 +22,7 @@ export const UserProvider = ({ children }) => {
     const [city, setCity] = useState("");
     const [gender, setGender] = useState("");
     const [isProvider, setIsProvider] = useState(false);
+    const [carsProvided, setCarsProvided] = useState([]);
 
     const logout = () => {
         localStorage.removeItem('selfsteerAuthToken');
@@ -32,6 +34,7 @@ export const UserProvider = ({ children }) => {
         setCity("");
         setGender("");
         setIsProvider(false);
+        setCarsProvided([])
         alert("Logged out successfully");
     };
 
@@ -49,6 +52,7 @@ export const UserProvider = ({ children }) => {
                 setCity(userData.city);
                 setGender(userData.gender);
                 setIsProvider(userData.isProvider);
+                setCarsProvided(userData.carsProvided)
                 console.log("User data set from localStorage", userData);
             }
 
@@ -75,7 +79,7 @@ export const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider
-            value={{ userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider, logout }}
+            value={{ userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider,carsProvided,setCarsProvided, logout }}
         >
             {children}
         </UserContext.Provider>

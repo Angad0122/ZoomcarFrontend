@@ -4,6 +4,7 @@
     justify-content: space-between;
 }
 .headingandaddbutton h1{
+    color: black;
     padding: 10px;
     font-size: 25px;
     margin-left: 45px;
@@ -24,16 +25,29 @@
     margin: 10px;
     box-sizing: border-box;
 }
+.noCarsandloadingcars{
+    margin: 15% 0% 0% 40%;
+    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
-@media (max-width: 768px) {
+@media (min-width: 769px) {
     .providerCarsContainer .CarCard {
         flex: 1 1 calc(50% - 20px); /* 2 cards per row on smaller screens */
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .headingandaddbutton h1, button{
         font-size: 20px;
+    }
+    .providerCarsContainer {
+        display: flex;
+        flex-wrap: wrap; /* Allows cards to wrap to the next row */
+        justify-content: space-around; /* Aligns cards to the left */
     }
     .providerCarsContainer .CarCard {
         flex: 1 1 calc(100% - 20px); /* 1 card per row on very small screens */

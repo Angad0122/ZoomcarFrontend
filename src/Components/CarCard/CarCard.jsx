@@ -1,48 +1,61 @@
-import './CarCard.css'
-import React from 'react'
+import React from 'react';
+import Slider from 'react-slick';
+import './CarCard.css';
 
-function CarCard() {
+function CarCard({ car }) {
+  // Calculate the average rating
+  const averageRating = car.ratings.length > 0 
+    ? (car.ratings.reduce((sum, rating) => sum + rating, 0) / car.ratings.length).toFixed(1)
+    : 'No ratings';
 
-    
-    return (
-        <>
-            <div className="card">
-                <div className="card-image">
-                    <button className="favourite-btn">❤️</button>
-                    <div className="availability-circle"></div>
-                    <div className="ratings">4.5⭐</div>
-                </div>
+  // Slider settings
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+  };
 
-                {/* =========== */}
-                <div className='card-desc'>
-                    <div className='card-desc-left'>
-                        <div>
-                            <h2 className='card-desc-left-text'>Car Company</h2>
-                        </div>
-                        <div>
-                            <h3 className='card-desc-left-text'>Car model</h3>
-                        </div>
-                        <div>
-                            <h3 className='card-desc-left-text'>Car year</h3>
-                        </div>
-                        <hr className='card-desc-left-hr' />
-                        <div>
-                            <h4 className='card-desc-left-text'>Car Location</h4>
-                        </div>
-                    </div>
-                    {/* ----------*/}
-                    <div className='card-desc-right'>
-                        <div>
-                            <p className='card-desc-right-putatend'>200/Hour</p>
-                        </div>
-                        <div>
-                            <p className='card-desc-right-putatend'>2000/Day</p>
-                        </div>
-                    </div>
-                </div>
+  return (
+    <div className="card">
+      <div className="card-image">
+        <button className="favourite-btn">❤️</button>
+        {car.availability ? (
+          <div className="availability-circle-green"></div>
+        ) : (
+          <div className="availability-circle-red"></div>
+        )}
+        <div className="ratings">{averageRating}⭐</div>
+
+        {/* Image Slider */}
+        <Slider {...settings}>
+          {car.images.map((image, index) => (
+            <div key={index}>
+              <img src={image} alt={`Car ${index}`} className="car-image" />
             </div>
-        </>
-    )
+          ))}
+        </Slider>
+      </div>
+
+      <div className='card-desc'>
+        <div className='card-desc-left'>
+          <h2 className='card-desc-left-text'>{car.company}</h2>
+          <h3 className='card-desc-left-text'>{car.model}</h3>
+          <h3 className='card-desc-left-text'>{car.year}</h3>
+          <hr className='card-desc-left-hr' />
+          <h4 className='card-desc-left-text'>{car.location}</h4>
+        </div>
+
+        <div className='card-desc-right'>
+          <p className='card-desc-right-putatend'>{car.pricePerHour}/Hour</p>
+          <p className='card-desc-right-putatend'>{car.pricePerDay}/Day</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default CarCard;

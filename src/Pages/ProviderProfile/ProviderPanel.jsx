@@ -11,16 +11,13 @@ function ProviderPanel() {
 
 
     const { userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider, logout } = useUser();
-    const [selectedOption, setSelectedOption] = useState('ShowProfile');
+    const [selectedOption, setSelectedOption] = useState('YourCars');
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Check if the screen is mobile-sized
     const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!name) {
-            navigate('/');
-        }
 
         // Adjust height based on content
         const profileContainer = document.querySelector('.profile-container');
@@ -84,13 +81,6 @@ function ProviderPanel() {
                         <div className="options">
                             
                             <button
-                                className={selectedOption === 'ShowProfile' ? 'active' : ''}
-                                onClick={() => handleOptionClick('ShowProfile')}
-                            >
-                                Profile
-                            </button>
-                            <hr />
-                            <button
                                 className={selectedOption === 'YourCars' ? 'active' : ''}
                                 onClick={() => handleOptionClick('YourCars')}
                             >
@@ -134,7 +124,6 @@ function ProviderPanel() {
                     </div>
                 )}
                 <div className="content">
-                    {selectedOption === 'ShowProfile' && <div>Your Profile</div>}
                     {selectedOption === 'YourCars' && <div><ProviderYourCars /></div>}
                     {selectedOption === 'ActiveBookings' && <div>ActiveBookings</div>}
                     {selectedOption === 'BookingRequests' && <div>Booking Requests</div>}

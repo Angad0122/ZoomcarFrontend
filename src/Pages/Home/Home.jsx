@@ -23,7 +23,7 @@ function Home() {
             </div>
             <div className='carCardcontainer'>
                 <div>
-                    <CarCard />
+                    {/* <CarCard /> */}
                 </div>
             </div>
         </>

@@ -1,3 +1,7 @@
+/* Add this to your CarCard.css */
+@import "../../../node_modules/slick-carousel/slick/slick.css"; 
+@import "../../../node_modules/slick-carousel/slick/slick-theme.css"; 
+
 /* General card styling */
 .card {
     margin: 10px;
@@ -11,12 +15,17 @@
 }
 
 .card-image {
-    height: 200px;
+    width: 100%; /* Make image take full width */
+    height: 200px; /* Set a fixed height for the image container */
     overflow: hidden;
-    background-image: url("../../assets/slide2.jpg");
-    background-size: cover;
     position: relative;
-    transition: height 0.3s; /* Smooth transition for height */
+}
+
+/* Style for the images in the slider */
+.car-image {
+    width: 100%; /* Make image take full width */
+    height: 100%; /* Make image take full height */
+    object-fit: cover; /* Ensures the image covers the area */
 }
 
 /* Favourite button */
@@ -38,13 +47,24 @@
 }
 
 /* Availability circle */
-.availability-circle {
+.availability-circle-green {
     position: absolute;
     bottom: 10px;
     left: 10px;
     width: 10px;
     height: 10px;
     background-color: rgb(96, 255, 56); /* Change to red if unavailable */
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.availability-circle-red {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(255, 0, 0); /* Change to red if unavailable */
     border-radius: 50%;
     z-index: 1;
 }
@@ -74,10 +94,12 @@
     max-width: 60%;
     padding: 5px;
 }
-.card-desc-left-text{
+
+.card-desc-left-text {
     display: flex;
     flex-direction: row;
 }
+
 .card-desc-left-hr {
     background-color: rgb(0, 0, 0);
     border: none;
@@ -134,9 +156,10 @@
         padding: 4px;
     }
 
-    .card-desc-left-text{
+    .card-desc-left-text {
         font-size: 12px;
     }
+
     .card-desc-right {
         width: 40%;
         padding: 4px;
@@ -149,12 +172,12 @@
 
 @media (max-width: 480px) {
     .card {
-        width: 180px; /* Further reduce width */
+        width: 80%; /* Further reduce width */
         height: 220px; /* Adjust height */
     }
 
     .card-image {
-        height: 120px; /* Adjust image height */
+        height: 60%; /* Adjust image height */
     }
 
     .favourite-btn {
@@ -182,9 +205,10 @@
         padding: 3px;
     }
 
-    .card-desc-left-text{
+    .card-desc-left-text {
         font-size: 10px;
     }
+
     .card-desc-right {
         padding: 3px;
     }

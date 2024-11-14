@@ -1,0 +1,58 @@
+.imageOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.imageContainer {
+    position: relative;
+    width: 80%;
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlayImage {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.navButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.leftButton {
+    left: -50px;
+}
+
+.rightButton {
+    right: -50px;
+}
