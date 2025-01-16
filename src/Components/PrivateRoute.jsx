@@ -1,89 +1,84 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useUser } from '../Contexts/AuthContext';
 import axios from 'axios';
+import MainLoader from './LoadingPage/MainLoader';
 
-const PrivateRoute = () => {
-    const {
-        userId, // Get userId from context
-        setUserId, setName, setUserEmail, setPhone, setCity, setGender, setIsProvider, carsProvided, setCarsProvided, logout
-    } = useUser();
-    
-    const [tokenVerified, setTokenVerified] = useState(null); // null: not verified, true: valid, false: invalid
-    const [loading, setLoading] = useState(true); // Manage loading state
+const PrivateRoute = ({ requiredRole }) => {
+    const { logout, userRole } = useUser();
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const verifyToken = async () => {
-            const encryptedToken = localStorage.getItem("selfsteerAuthToken");
+        const verifyUser = async () => {
+            try {
+                const storedUserData = JSON.parse(localStorage.getItem('userData'));
+                const token = localStorage.getItem(
+                    storedUserData?.userRole === 'admin' ? 'adminToken' : 'selfsteerAuthToken'
+                );
 
-            if (encryptedToken) {
-                try {
-                    const response = await axios.post(
-                        `${import.meta.env.VITE_APILINK}/user/verifytoken`,
-                        { encryptedToken },
-                        { withCredentials: true }
-                    );
-
-                    if (response.data.success) { // Assuming the response contains a "success" flag
-                        console.log("Token is valid: Token verified successfully");
-
-                        // Only load user data if userId is not already set in context
-                        if (!userId) {
-                            // Now load user data from localStorage after verifying the token
-                            const storedUserData = localStorage.getItem('userData');
-                            if (storedUserData) {
-                                const userData = JSON.parse(storedUserData);
-                                // Set user data in context
-                                setUserId(userData.userId);
-                                setName(userData.name);
-                                setUserEmail(userData.userEmail);
-                                setPhone(userData.phone);
-                                setCity(userData.city);
-                                setGender(userData.gender);
-                                setIsProvider(userData.isProvider);
-                                setCarsProvided(userData.carsProvided);
-                                console.log("User data loaded by PrivateRoute from localStorage", userData);
-                            }
-                        }
-                        setTokenVerified(true); // Token is valid
-                    } else {
-                        console.error("Token is invalid:", response.data.message);
-                        setTokenVerified(false); // Token is invalid
-                    }
-                } catch (error) {
-                    console.error("Token verification failed:", error);
-                    setTokenVerified(false); // Mark as invalid on error
-                } finally {
-                    setLoading(false); // End loading state after verification completes
+                if (!storedUserData || !token) {
+                    console.warn('Missing user data or token. Redirecting to login.');
+                    setIsAuthenticated(false);
+                    return;
                 }
-            } else {
-                setTokenVerified(false); // No token found
-                setLoading(false); // End loading
+
+                const response = await axios.post(
+                    `${import.meta.env.VITE_APILINK}/user/verifytoken`,
+                    { encryptedToken: token },
+                    { withCredentials: true }
+                );
+
+                if (response.data.success) {
+                    const userRole = response.data.userRole;
+
+                    // Check for role mismatch if requiredRole is provided
+                    if (requiredRole && userRole !== requiredRole) {
+                        console.error(
+                            `Unauthorized access: User role "${userRole}" does not match required role "${requiredRole}"`
+                        );
+                        alert("You don't have access to this page.");
+                        navigate('/');
+                        setIsAuthenticated(false);
+                        return;
+                    }
+
+                    // Restrict `Profile` page to only renter or provider
+                    if (!requiredRole && userRole === 'admin' && window.location.pathname === '/profile') {
+                        alert("You don't have access to this page.");
+                        navigate('/');
+                        setIsAuthenticated(false);
+                        return;
+                    }
+
+                    setIsAuthenticated(true);
+                } else {
+                    console.warn('Token verification failed:', response.data.message);
+                    setIsAuthenticated(false);
+                }
+            } catch (error) {
+                console.error('Error verifying token:', error);
+                setIsAuthenticated(false);
+            } finally {
+                setLoading(false);
             }
         };
 
+        verifyUser();
+    }, [requiredRole, navigate]);
 
-        if (!userId) {
-            verifyToken();
-        } else {
-            setTokenVerified(true);  // Set tokenVerified to true since userId is found
-            setLoading(false);  // If userId is already set, skip verification and stop loading
-        }    
-    }, [setUserId, setName, setUserEmail, setPhone, setCity, setGender, setIsProvider, logout, userId]);
-
-    // Show loading state until token is verified
     if (loading) {
-        return <div>Loading...</div>;
+        return <MainLoader />;
     }
 
-    // If the token is verified, show the requested page (Outlet), otherwise redirect to /auth
-    if (tokenVerified === true) {
+    if (isAuthenticated === true) {
         return <Outlet />;
-    } else if (tokenVerified === false) {
-        return <Navigate to="/auth" />;
+    } else if (isAuthenticated === false) {
+        alert("You don't have access to this page.");
+        navigate('/');
+        return null; // Avoid rendering anything
     }
-
-    return null; // Handle edge cases where verification isn't done correctly
 };
 
 export default PrivateRoute;

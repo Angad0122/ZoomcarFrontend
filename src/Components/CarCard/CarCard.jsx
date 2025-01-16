@@ -4,7 +4,7 @@ import './CarCard.css';
 
 function CarCard({ car }) {
   // Calculate the average rating
-  const averageRating = car.ratings.length > 0 
+  const averageRating = car.ratings.length > 0
     ? (car.ratings.reduce((sum, rating) => sum + rating, 0) / car.ratings.length).toFixed(1)
     : 'No ratings';
 
@@ -43,10 +43,13 @@ function CarCard({ car }) {
       <div className='card-desc'>
         <div className='card-desc-left'>
           <h2 className='card-desc-left-text'>{car.company}</h2>
-          <h3 className='card-desc-left-text'>{car.model}</h3>
+          <h3 className='card-desc-left-text'>{car.model.length > 15 ? `${car.model.slice(0, 15)}...` : car.model}</h3>
           <h3 className='card-desc-left-text'>{car.year}</h3>
           <hr className='card-desc-left-hr' />
-          <h4 className='card-desc-left-text'>{car.location}</h4>
+          <h4 className='card-desc-left-text'>
+            {car.address?.length > 15 ? `${car.address.slice(0, 15)}...` : car.address || 'No Address'}
+          </h4>
+          <h4 className='card-desc-left-text'>{car.city}</h4>
         </div>
 
         <div className='card-desc-right'>

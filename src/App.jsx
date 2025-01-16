@@ -15,15 +15,22 @@ function App() {
     <UserProvider>
       <Router>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<SigninSignup />} />
-          <Route path="/admin" element={<AdminPanel />} />
-          <Route  element = {<PrivateRoute/>} >
-            <Route path="/profile" element={<Profile/>}/>
-            <Route path="/provider-profile" element={<ProviderPanel/>}/>
-            <Route path="/carDetails" element={<CarDetails/>}/>
+          <Route path="/carDetails" element={<CarDetails />} />
+
+          {/* Private Routes */}
+          {/* General authenticated user route */}
+          <Route element={<PrivateRoute  />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/provider-profile" element={<ProviderPanel />} />
           </Route>
-          
+
+          {/* Admin-specific route */}
+          <Route element={<PrivateRoute requiredRole="admin" />}>
+            <Route path="/admin" element={<AdminPanel />} />
+          </Route>
         </Routes>
       </Router>
     </UserProvider>

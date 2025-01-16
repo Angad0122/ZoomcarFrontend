@@ -1,0 +1,261 @@
+.profile-container {
+    display: flex;
+    flex-direction: row; /* Stack sidebar and content side by side by default */
+    overflow: hidden;
+    background-image: url('../../assets/slide2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh; /* Default to 100vh */
+    height: auto;
+}
+
+/* Sidebar styles */
+.profile-sidebar {
+    width: 100%; /* Full width on small screens */
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: solid rgba(0, 0, 0, 0.5);
+    border-width: 2px;
+    margin: 20px 10px 20px 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box; /* Ensures padding is included in width */
+    position: relative;
+    overflow: auto; /* Enable scrolling when content overflows */
+    max-height: calc(100vh - 10px); /* Ensure the sidebar does not exceed screen height */
+}
+
+/* User info styles */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    margin-bottom: 10px;
+    height: auto;
+    max-height: 200px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.user-info p {
+    margin: 2px 0;
+    font-weight: 700;
+}
+
+.user-info img {
+    width: 80px; /* Adjusted for mobile */
+    height: auto;
+    border-radius: 50%;
+}
+
+/* Options styles */
+.options {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto; /* Enable scrolling when options overflow */
+}
+
+.options hr {
+    background-color: rgb(0, 0, 0); 
+    border: none;            
+    height: 1px;            
+    margin: 2px 0;         
+}
+
+.options p {
+    margin: 2px 0;
+    padding: 2px 5px;
+}
+
+.options button {
+    background-color: #f0f0f0;
+    color: #000000;
+    margin: 2px 0;
+    width: 100%;
+    font-size: 14px; /* Reduced font size for mobile */
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.options button.active {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-weight: bold;
+}
+
+.options button:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+}
+
+/* Logout button and logo styles */
+.logoutbuttonandlogo {
+    display: flex;
+    flex-direction: row;
+}
+
+.logoutlogo {
+    font-size: large; /* Adjusted for mobile */
+}
+
+/* Content area styles */
+.content {
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: solid rgba(0, 0, 0, 0.5);
+    border-width: 2px;
+    margin: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow: auto; /* Enable scrolling when content overflows */
+    max-height: calc(100vh - 20px); /* Ensure the content does not exceed screen height */
+}
+
+/* New CSS for mobile-specific functionality */
+.mobile-header {
+    display: none; /* Initially hidden */
+    padding: 10px;
+    text-align: center;
+    background-color: #111;
+    color: white;
+    font-size: 18px;
+}
+
+.mobile-header button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.mobile-header button:hover {
+    background-color: #333;
+}
+
+/* Media queries for different screen sizes */
+@media (min-width: 769px) {
+    .profile-container {
+        flex-direction: row; /* Display sidebar and content side by side on larger screens */
+    }
+
+    .profile-sidebar {
+        width: 300px; /* Fixed width on larger screens */
+        height: auto; /* Full height minus margins */
+    }
+
+    .content {
+        margin: 20px 20px 20px 10px;
+        overflow: auto; /* Enable scrolling when content overflows */
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column; /* Stack sidebar and content vertically on smaller screens */
+        overflow: hidden;
+    }
+
+    .profile-sidebar {
+        width: 100%; /* Ensure full width for sidebar */
+        margin: 10px 10px 10px 10px; /* Apply 10px margin all around */
+        box-sizing: border-box; /* Ensure margins and padding are included in width */
+        max-width: 100%; /* Ensure sidebar stays within screen limits */
+    }
+
+    .content {
+        width: 100%; /* Make sure content takes full width */
+        margin: 10px 10px 10px 10px; /* Apply 10px margin all around, including the right */
+        padding: 10px;
+        box-sizing: border-box; /* Ensure margins and padding are included in width */
+        overflow: auto; /* Ensure content can scroll if needed */
+    }
+
+    .mobile-header {
+        display: block; /* Show mobile header */
+    }
+
+    .profile-container.hide-sidebar .sidebar {
+        display: none; /* Hide sidebar when in hide-sidebar mode */
+    }
+
+    .profile-container.hide-sidebar .content {
+        margin-top: 0; /* Adjust content margin when sidebar is hidden */
+    }
+}
+
+
+
+
+/* Class added for content overflow scenarios */
+body.content-overflowing .profile-container {
+    height: 100%; /* Extend height if content overflows */
+}
+
+
+
+/* Skeleton styles */
+.skeleton {
+    background: linear-gradient(-90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 400% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 5px;
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+/* Skeleton for the sidebar */
+.skeleton-sidebar {
+    height: 200px;
+    width: 100%;
+    margin: 10px 0;
+}
+
+/* Skeleton for content area */
+.skeleton-content {
+    width: 100%;
+    height: 200px;
+    margin: 10px 0;
+}
+
+/* Adjust skeleton size for mobile */
+@media (max-width: 768px) {
+    .skeleton-sidebar {
+        height: 150px;
+    }
+
+    .skeleton-content {
+        height: 150px;
+    }
+}
+
+/* Adjust skeleton size for larger screens */
+@media (min-width: 769px) {
+    .skeleton-sidebar {
+        height: 300px;
+        max-width: 300px;
+    }
+
+    .skeleton-content {
+        height: 300px;
+        max-width: calc(100% - 320px);
+        margin: 20px;
+    }
+}

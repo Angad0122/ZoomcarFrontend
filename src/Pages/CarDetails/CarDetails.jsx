@@ -38,26 +38,24 @@ function CarDetails() {
         setOverlayVisible(false);
     };
 
-    const handleDelete = async () => { 
-        const encryptedToken = localStorage.getItem('selfsteerAuthToken');
-    
+    const handleDelete = async () => {
+        const encryptedToken = localStorage.getItem('selfsteerAuthToken') || localStorage.getItem('adminToken');
+
         try {
             const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/deleteCar/${car._id}`, {
-                userId: userId,
                 encryptedToken: encryptedToken
             });
-    
+
             if (response.status === 200) {
-                // Update carsProvided in the context
-                setCarsProvided(carsProvided.filter(id => id !== car._id));
-                
                 // Update userData.carsProvided in localStorage
                 const userData = JSON.parse(localStorage.getItem('userData'));
-                if (userData) {
+                if (userData.name != import.meta.env.VITE_SELFSTEERADMINNAME) {
+                    // Update carsProvided in the context
+                    setCarsProvided(carsProvided.filter(id => id !== car._id));
                     userData.carsProvided = userData.carsProvided.filter(id => id !== car._id);
                     localStorage.setItem('userData', JSON.stringify(userData));
                 }
-    
+
                 alert("Car deleted successfully");
                 navigate(-1); // Redirect after successful deletion
             }
@@ -66,7 +64,7 @@ function CarDetails() {
             alert("Failed to delete the car. Please try again.");
         }
     };
-    
+
 
     return (
         <>
@@ -108,19 +106,20 @@ function CarDetails() {
                                     <p>{car.carType}</p>
                                     <p>{car.pricePerHour}</p>
                                     <p>{car.pricePerDay}</p>
-                                    <p>{car.location}</p>
-                                    
+                                    <p>{car.city}</p>
+                                    <p>{car.address}</p>
+
                                 </div>
 
                                 <div className='carDetailsrightside'>
-                                    {car.providerEmailId === userEmail && (
+                                    <div className='ratingbox'>
+                                        <p className='rating'> {averageRating} <IoIosStar className='ratingstar' />
+                                        </p>
+                                        <p>{car.ratings.length} Reviews</p>
+                                    </div>
+                                    {(car.providerEmailId === userEmail || userEmail == import.meta.env.VITE_SELFSTEERADMINEMAIL) && (
                                         <>
-                                        <div className='ratingbox'>
-                                            <p className='rating'> {averageRating} <IoIosStar className='ratingstar'/>
-                                            </p>
-                                            <p>{car.ratings.length} Reviews</p>
-                                        </div>
-                                        <button className='deletebtn' onClick={handleDelete}>Delete</button>
+                                            <button className='deletebtn' onClick={handleDelete}>Delete</button>
                                         </>
                                     )}
                                 </div>

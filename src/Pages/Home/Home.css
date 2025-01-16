@@ -27,6 +27,38 @@ body, html {
     text-align: center;
 }
 
+.carcardsandheading{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5% 10%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    padding-bottom: 5%;
+
+}
+.carsheading{
+    font-size: 40px;
+    font-weight:500;
+    margin: 30px;
+    color: #000;
+}
+
+.carCardContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.browseAllCarsBtn{
+    background-color: #000000;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 10px 25px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
 /* Media Queries for smaller screens */
 @media (max-width: 768px) {
     .headings {

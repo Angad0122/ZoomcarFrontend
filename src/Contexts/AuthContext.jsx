@@ -6,6 +6,7 @@ export const UserContext = createContext({
     userId: "",
     name: '',
     userEmail: '',
+    userRole:'',
     phone: 0,
     city: '',
     gender: '',
@@ -18,18 +19,23 @@ export const UserProvider = ({ children }) => {
     const [userId, setUserId] = useState("");
     const [name, setName] = useState("");
     const [userEmail, setUserEmail] = useState("");
+    const [userRole, setUserRole] = useState("")
     const [phone, setPhone] = useState(0);
     const [city, setCity] = useState("");
     const [gender, setGender] = useState("");
     const [isProvider, setIsProvider] = useState(false);
     const [carsProvided, setCarsProvided] = useState([]);
+    const [loading, setLoading] = useState(true); // New state to track loading
+
 
     const logout = () => {
         localStorage.removeItem('selfsteerAuthToken');
+        localStorage.removeItem('adminToken')
         localStorage.removeItem('userData');
         setUserId("");
         setName("");
         setUserEmail("");
+        setUserRole("");
         setPhone(0);
         setCity("");
         setGender("");
@@ -40,46 +46,50 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const encryptedToken = localStorage.getItem('selfsteerAuthToken');
             const storedUserData = localStorage.getItem('userData');
-
             if (storedUserData) {
                 const userData = JSON.parse(storedUserData);
                 setUserId(userData.userId);
                 setName(userData.name);
                 setUserEmail(userData.userEmail);
+                setUserRole(userData.userRole);
                 setPhone(userData.phone);
                 setCity(userData.city);
                 setGender(userData.gender);
                 setIsProvider(userData.isProvider);
-                setCarsProvided(userData.carsProvided)
-                console.log("User data set from localStorage", userData);
+                setCarsProvided(userData.carsProvided);
             }
-
+    
+            const encryptedToken = userRole === 'admin'
+                ? localStorage.getItem('adminToken')
+                : localStorage.getItem('selfsteerAuthToken');
+    
             if (encryptedToken) {
                 try {
-                    const response = await axios.post(`${import.meta.env.VITE_APILINK}/user/verifytoken`,
+                    const response = await axios.post(
+                        `${import.meta.env.VITE_APILINK}/user/verifytoken`,
                         { encryptedToken },
                         { withCredentials: true }
                     );
-
+    
                     if (!response.data.success) {
-                        console.error("Token verification failed");
+                        console.error('Token verification failed');
                         logout();
                     }
                 } catch (error) {
-                    console.error("Error verifying token", error);
+                    console.error('Error verifying token:', error);
                     logout();
                 }
             }
+            setLoading(false);
         };
-
-        fetchData(); // Fetch user data and verify token on mount
-    }, []); // No dependencies, runs once on mount
+    
+        fetchData();
+    }, []);    
 
     return (
         <UserContext.Provider
-            value={{ userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider,carsProvided,setCarsProvided, logout }}
+            value={{ userId, setUserId, name, setName, userEmail, setUserEmail, userRole, setUserRole, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider, carsProvided, setCarsProvided, logout, loading,}}
         >
             {children}
         </UserContext.Provider>

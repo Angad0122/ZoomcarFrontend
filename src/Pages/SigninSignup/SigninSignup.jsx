@@ -6,7 +6,7 @@ import { useUser } from '../../Contexts/AuthContext';
 
 function SigninSignup() {
 
-    const { userId, setUserId, name, setName, userEmail, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider,
+    const { userId, setUserId, name, setName, userEmail,userRole,setUserRole, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider,
         carsProvided, setCarsProvided, logout } = useUser()
 
     const [signUpOpen, setSignUpOpen] = useState(false);
@@ -93,45 +93,65 @@ function SigninSignup() {
     };
 
 
-    const handleLoginSubmit = async (event) => {
-        event.preventDefault();
-    
-        const formData = {
-            email: event.target.exampleInputEmail1.value,
-            password: event.target.exampleInputPassword1.value,
-        };
-    
-        const errors = validateLogin(formData);
-        setFormErrors(errors);
-    
-        if (Object.keys(errors).length === 0) {
-            setIsSubmitting(true);
-            try {
-                const response = await axios.post(`${import.meta.env.VITE_APILINK}/auth/login`, formData, {
-                    withCredentials: true
-                });
-    
-                
+const handleLoginSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = {
+        email: event.target.exampleInputEmail1.value,
+        password: event.target.exampleInputPassword1.value,
+    };
+
+    const errors = validateLogin(formData);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
+        setIsSubmitting(true);
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_APILINK}/auth/login`, formData, {
+                withCredentials: true,
+            });
+
+            // Check if logged in as Admin
+            if (response.data.message === "Logged in as Admin") {
+                const token = response.data.encryptedToken;
+                setName(response.data.name)
+                setUserEmail(response.data.email)
+                setUserId(response.data.userId)
+                setUserRole(response.data.userRole)
+                const adminData = {
+                    name: response.data.name,
+                    userEmail: response.data.email,
+                    userId: response.data.userId,
+                    userRole: response.data.userRole
+                }
+                // Save userData and token to localStorage
+                console.log(adminData, token);
+                localStorage.setItem("adminToken", token); // Save admin token if needed
+                localStorage.setItem('userData', JSON.stringify(adminData)); // Serialize the userData object
+                navigate("/admin"); // Navigate to Admin panel
+            } else {
+                // User login workflow
                 setEmail(formData.email);
                 setLoginOtp(true);
                 setOtpOpen(true);
-            } catch (error) {
-                console.error("Error during login:", error); 
-    
-                if (error.response && error.response.data && error.response.data.error) {
-                    alert(error.response.data.error);
-                } else if (error.response) {
-                    alert(`Error: ${error.response.status} - ${error.response.statusText}`);
-                } else {
-                    alert("An unexpected error occurred. Please try again later.");
-                    console.log(error);
-                    
-                }
-            } finally {
-                setIsSubmitting(false);
             }
+        } catch (error) {
+            console.error("Error during login:", error);
+
+            if (error.response && error.response.data && error.response.data.error) {
+                alert(error.response.data.error);
+            } else if (error.response) {
+                alert(`Error: ${error.response.status} - ${error.response.statusText}`);
+            } else {
+                alert("An unexpected error occurred. Please try again later.");
+                console.log(error);
+            }
+        } finally {
+            setIsSubmitting(false);
         }
-    };
+    }
+};
+
     
 
 
@@ -195,7 +215,8 @@ function SigninSignup() {
                     city: response.data.city,
                     gender: response.data.gender,
                     isProvider: response.data.isProvider,
-                    carsProvided:response.data.carsProvided
+                    carsProvided:response.data.carsProvided,
+                    userRole:response.data.userRole
                 };
     
                 // Save userData and token to localStorage
@@ -212,12 +233,12 @@ function SigninSignup() {
             setGender(response.data.gender);
             setIsProvider(response.data.isProvider);
             setCarsProvided(response.data.carsProvided)
+            console.log(response.data.message, name, userEmail, userRole, phone, city, gender, isProvider);
 
     
             // Navigate to the home page or dashboard after successful login
             navigate('/');
     
-            console.log(response.data.message, name, userEmail, phone, city, gender, isProvider);
     
         } catch (error) {
             setOtpErrors({ otp: 'Invalid or expired OTP' });

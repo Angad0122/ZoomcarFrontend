@@ -3,8 +3,6 @@ import { FaBars, FaUserCircle } from 'react-icons/fa';
 import './NavBar.css';
 import { useUser } from '../../Contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import Sidebar from '../Sidebar/Sidebar';
 
 const NavBar = () => {
@@ -18,6 +16,10 @@ const NavBar = () => {
 
   const gotoprofile = () => {
     navigate('/profile');
+  }
+
+  const gotoAdmin = ()=>{
+    navigate('/admin')
   }
 
   const handleHamburgerClick = () => {
@@ -40,14 +42,11 @@ const NavBar = () => {
           <div className="navbarright">
             {name ? (
               <>
+              {name == import.meta.env.VITE_SELFSTEERADMINNAME?(
+               <button className='navbarloginbutton' onClick={()=>{ gotoAdmin()}}>{name}</button>
+              ):(
                 <button className="navbarloginbutton" onClick={() => { gotoprofile() }}>{name}</button>
-                {/* <div className="relative z-5" >'
-                <DropdownButton className="navbarbutton" title={name}>
-                <Dropdown.Item onClick={providecarbutton}>Provide car</Dropdown.Item>
-                  <hr className="m-1" />
-                  <Dropdown.Item onClick={handleLogoutClick}>Logout</Dropdown.Item>
-                </DropdownButton>
-                </div> */}
+              )}
               </>
             ) : (
               <button className="navbarloginbutton" onClick={handleLoginSignupClick}>Login</button>

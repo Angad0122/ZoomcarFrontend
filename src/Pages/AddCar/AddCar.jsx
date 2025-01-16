@@ -4,14 +4,15 @@ import './AddCar.css';
 import { useUser } from '../../Contexts/AuthContext';
 
 const CarDetailsForm = () => {
-    const { userEmail,name, isProvider, setIsProvider, carsProvided, setCarsProvided } = useUser();
+    const { userId, userEmail,name, isProvider, setIsProvider, carsProvided, setCarsProvided } = useUser();
     const [carDetails, setCarDetails] = useState({
         company: '',
         model: '',
         year: '',
         pricePerHour: '',
         pricePerDay: '',
-        location: '',
+        city: '',
+        address:'',
         registrationNumber: '',
         availability: true,
         images: [],
@@ -93,6 +94,7 @@ const CarDetailsForm = () => {
     
         const carData = {
             ...carDetails,
+            userId,
             userEmail,
             name,
             encryptedToken: localStorage.getItem('selfsteerAuthToken')
@@ -144,7 +146,8 @@ const CarDetailsForm = () => {
                 year: '',
                 pricePerHour: '',
                 pricePerDay: '',
-                location: '',
+                city: '',
+                address: '',
                 registrationNumber: '',
                 availability: true,
                 images: [],
@@ -171,9 +174,7 @@ const CarDetailsForm = () => {
             <div className='addcarheadingdiv'>
                 <h1 className='addcarheading'>Add a New Car</h1>
             </div>
-            <form onSubmit={handleCarSubmit}>
-                {/* Other input fields... */}
-                
+            <form onSubmit={handleCarSubmit}>                
                 <div className="form-group-row">
                     <div className="form-group">
                         <label>Company:</label>
@@ -210,6 +211,20 @@ const CarDetailsForm = () => {
                         />
                     </div>
                     <div className="form-group">
+                        <label>Registration Number:</label>
+                        <input
+                            type="text"
+                            name="registrationNumber"
+                            value={carDetails.registrationNumber}
+                            onChange={handleChange}
+                            required
+                            pattern="^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$"
+                            title="Registration number should be in the format MP09AB0001"
+                        />
+                    </div>
+                </div>
+                <div className="form-group-row">
+                    <div className="form-group">
                         <label>Car Type:</label>
                         <select
                             name="carType"
@@ -226,8 +241,6 @@ const CarDetailsForm = () => {
                             <option value="Sports">Sports</option>
                         </select>
                     </div>
-                </div>
-                <div className="form-group-row">
                     <div className="form-group">
                         <label>Select Transmission type:</label>
                         <select
@@ -275,24 +288,23 @@ const CarDetailsForm = () => {
                 </div>
 
                 <div className="form-group-row">
+                    
                     <div className="form-group">
-                        <label>Registration Number:</label>
+                        <label>City Name:</label>
                         <input
                             type="text"
-                            name="registrationNumber"
-                            value={carDetails.registrationNumber}
+                            name="city"
+                            value={carDetails.city}
                             onChange={handleChange}
                             required
-                            pattern="^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$"
-                            title="Registration number should be in the format MP09AB0001"
                         />
                     </div>
                     <div className="form-group">
-                        <label>Location:</label>
+                        <label>Address:</label>
                         <input
                             type="text"
-                            name="location"
-                            value={carDetails.location}
+                            name="address"
+                            value={carDetails.address}
                             onChange={handleChange}
                             required
                         />
