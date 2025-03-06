@@ -16,28 +16,49 @@ function ProviderYourCars() {
   const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
-    console.log("car's ids provided by the user ",carsProvided);
+    console.log("car's ids provided by the user", carsProvided);
+
     const fetchCars = async () => {
-      if (carsProvided && carsProvided.length > 0) {
-        try {
-          setLoading(true);
-          const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/getCarsByIds`, {
-            carIds: carsProvided,
-            encryptedToken:localStorage.getItem('selfsteerAuthToken')
-          });
-          console.log("providerYourCar got cars data ",response.data);
-          
-          setCarsData(response.data); // Assuming the response contains the array of car details
-        } catch (error) {
-          console.error('Error fetching cars:', error);
-        } finally {
-          setLoading(false);
+        // Step 1: Check if "ProvidedCarsData" exists in local storage
+        const cachedCarsData = localStorage.getItem("ProvidedCarsData");
+
+        if (cachedCarsData) {
+            console.log("Using cached cars data from localStorage");
+            setCarsData(JSON.parse(cachedCarsData));
+            setLoading(false);
+
+            return; // Exit function to avoid unnecessary API call
         }
-      }
+
+        // Step 2: If no cache, make API request
+        if (carsProvided && carsProvided.length > 0) {
+            try {
+                setLoading(true);
+                const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/getCarsByIds`, {
+                    carIds: carsProvided,
+                    encryptedToken: localStorage.getItem('selfsteerAuthToken')
+                });
+
+                console.log("providerYourCar got cars data", response.data);
+
+                // Step 3: Save fetched data to state
+                setCarsData(response.data);
+
+                // Step 4: Store the new data in localStorage
+                localStorage.setItem("ProvidedCarsData", JSON.stringify(response.data));
+            } catch (error) {
+                console.error("Error fetching cars:", error);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            setLoading(false);
+        }
     };
 
     fetchCars();
-  }, [carsProvided]);
+}, [carsProvided]); // Re-run when `carsProvided` changes
+
 
   return (
     <>

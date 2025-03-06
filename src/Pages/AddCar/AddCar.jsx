@@ -4,129 +4,84 @@ import './AddCar.css';
 import { useUser } from '../../Contexts/AuthContext';
 
 const CarDetailsForm = () => {
-    const { userId, userEmail,name, isProvider, setIsProvider, carsProvided, setCarsProvided } = useUser();
+    const { userId, userEmail, name,isProvider, setIsProvider, setCarsProvided } = useUser();
     const [carDetails, setCarDetails] = useState({
-        company: '',
-        model: '',
-        year: '',
-        pricePerHour: '',
-        pricePerDay: '',
-        city: '',
-        address:'',
-        registrationNumber: '',
-        availability: true,
-        images: [],
-        carType: '',
-        transmissionType: '',
-        fuelType: '',
-        seats: '',
+        company: '', model: '', year: '', pricePerHour: '', pricePerDay: '', city: '', address: '',
+        registrationNumber: '', availability: true, carType: '', transmissionType: '', fuelType: '', seats: ''
     });
+    const [images, setImages] = useState([]);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        const processedValue = name === 'registrationNumber' ? value.replace(/\s/g, '') : value;
-
+        const { name, value } = e.target;
         setCarDetails((prevDetails) => ({
-            ...prevDetails,
-            [name]: type === 'checkbox' ? checked : processedValue,
+            ...prevDetails, [name]: name === 'registrationNumber' ? value.replace(/\s/g, '') : value
         }));
     };
 
-    const compressImage = async (file) => {
-        //the image is getting compressed at backend not here
-        return file;
-    };
-
-    const handleFileChange = async (event) => {
+    const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
-
         if (files.length > 5) {
             alert('You can only upload up to 5 images.');
-            event.target.value = '';
             return;
         }
-
-        const validFiles = [];
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (file.size > 10 * 1024 * 1024) {
-                alert('Each image must be 10MB or smaller.');
-                setIsSubmitDisabled(true);
-                return;
-            } else {
-                const compressedFile = await compressImage(file); // Compress image
-                validFiles.push(compressedFile);
-            }
+        if (files.some(file => file.size > 10 * 1024 * 1024)) {
+            alert('Each image must be 10MB or smaller.');
+            setIsSubmitDisabled(true);
+            return;
         }
         setIsSubmitDisabled(false);
-
-        const promises = validFiles.map((file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        });
-
-        Promise.all(promises)
-            .then((base64Images) => {
-                setCarDetails((prevDetails) => ({
-                    ...prevDetails,
-                    images: base64Images,
-                }));
-            })
-            .catch((error) => {
-                console.error("Error reading files", error);
-            });
+        setImages(files);
     };
 
     const handleCarSubmit = async (event) => {
         event.preventDefault();
     
+        // Validate Registration Number
         const registrationNumberRegex = /^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$/;
         if (!registrationNumberRegex.test(carDetails.registrationNumber)) {
-            alert('Invalid registration number format. It should be in the format MP09AB0001.');
+            alert('Invalid registration number format.');
             return;
         }
     
-        const carData = {
-            ...carDetails,
-            userId,
-            userEmail,
-            name,
-            encryptedToken: localStorage.getItem('selfsteerAuthToken')
-        };
+        // Get the already encrypted token from Local Storage
+        const encryptedToken = localStorage.getItem('selfsteerAuthToken');
+        if (!encryptedToken) {
+            alert('User not authenticated');
+            return;
+        }
+    
+        // Create FormData
+        const formData = new FormData();
+        Object.keys(carDetails).forEach(key => formData.append(key, carDetails[key]));
+        images.forEach(file => formData.append('images', file));
+        formData.append('userId', userId);
+        formData.append('userEmail', userEmail);
+        formData.append('name', name);
     
         try {
-            const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/addcar`, carData, {
+    
+            const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/addcar`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${encryptedToken}` // 🔥 Send the token in headers
+                },
                 onUploadProgress: (progressEvent) => {
-                    const totalLength = progressEvent.total;
-                    if (totalLength) {
-                        setUploadProgress(Math.round((progressEvent.loaded * 100) / totalLength));
-                    }
+                    setUploadProgress(Math.round((progressEvent.loaded * 100) / progressEvent.total));
                 }
             });
     
-            // Extract the new car's data from the response
-            const newCar = response.data.car;
-    
-            // Update carsProvided in the context
-            setIsProvider(true);
-            setCarsProvided((prevCars) => [...prevCars, newCar._id]);
-    
+            setCarsProvided(prevCars => [...prevCars, response.data.car._id]);
+
             // Update userData.carsProvided in localStorage
             const userData = JSON.parse(localStorage.getItem('userData'));
             if (userData) {
-                userData.carsProvided = [...(userData.carsProvided || []), newCar._id];
+                userData.carsProvided = [...(userData.carsProvided || []), response.data.car._id];
                 localStorage.setItem('userData', JSON.stringify(userData));
             }
-    
-            alert('Your car successfully uploaded');
-            setUploadProgress(0);
-    
+            alert('Car successfully uploaded');
+
             // Update isProvider status in the backend if necessary
             if (!isProvider) {
                 const token = localStorage.getItem('selfsteerAuthToken');
@@ -138,35 +93,21 @@ const CarDetailsForm = () => {
                     
                 );
             }
-    
-            // Reset carDetails form
-            setCarDetails({
-                company: '',
-                model: '',
-                year: '',
-                pricePerHour: '',
-                pricePerDay: '',
-                city: '',
-                address: '',
-                registrationNumber: '',
-                availability: true,
-                images: [],
-                carType: '',
-                transmissionType: '',
-                fuelType: '',
-                seats: '',
-            });
+            setIsProvider(true);
+            // Reset form fields
+            setCarDetails({ company: '', model: '', year: '', pricePerHour: '', pricePerDay: '', city: '', address: '', registrationNumber: '', availability: true, carType: '', transmissionType: '', fuelType: '', seats: '' });
+            setImages([]);
+            setUploadProgress(0);
         } catch (error) {
-            if (error.response && error.response.status === 413) {
-                alert("The size of the images is too large. Please upload smaller images.");
-            } else if (error.response && error.response.status === 400) {
-                alert("The car already exists!");
-            } else {
-                console.error("Error adding car:", error);
-            }
+            console.error("Error adding car:", error);
+            alert("Error adding car");
             setUploadProgress(0);
         }
     };
+    
+    
+    
+
     
  
     return (
@@ -385,3 +326,4 @@ const CarDetailsForm = () => {
 };
 
 export default CarDetailsForm;
+

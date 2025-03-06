@@ -77,18 +77,19 @@ function CarDetails() {
                         <>
                             <div className="carImagesContainer">
                                 <div className="mainImage" onClick={() => openOverlay(0)}>
-                                    <img src={`${car.images[0]}`} alt="Main Car" />
+                                    <img src={`${import.meta.env.VITE_APILINK}${car.images[0]}`} alt="Main Car" />
                                 </div>
 
                                 <div className="thumbnailGallery">
                                     {car.images.slice(1, 5).map((image, index) => (
                                         <img
                                             key={index}
-                                            src={`${image}`}
+                                            src={`${import.meta.env.VITE_APILINK}${image}`}
                                             alt={`Car Thumbnail ${index + 1}`}
                                             className="thumbnailImage"
                                             onClick={() => openOverlay(index + 1)}
                                         />
+
                                     ))}
                                     {car.images.length > 5 && (
                                         <div className="extraImagesOverlay">
@@ -127,11 +128,12 @@ function CarDetails() {
 
                             {overlayVisible && (
                                 <ImageOverlay
-                                    images={car.images}
+                                    images={car.images.map(img => `${import.meta.env.VITE_APILINK}${img}`)}
                                     initialIndex={selectedImageIndex}
                                     onClose={closeOverlay}
                                 />
                             )}
+
                         </>
                     ) : (
                         <p>No car details found</p>

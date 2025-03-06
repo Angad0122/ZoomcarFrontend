@@ -32,6 +32,7 @@ export const UserProvider = ({ children }) => {
         localStorage.removeItem('selfsteerAuthToken');
         localStorage.removeItem('adminToken')
         localStorage.removeItem('userData');
+        localStorage.removeItem('ProvidedCarsData')
         setUserId("");
         setName("");
         setUserEmail("");

@@ -34,7 +34,12 @@ function CarCard({ car }) {
         <Slider {...settings}>
           {car.images.map((image, index) => (
             <div key={index}>
-              <img src={image} alt={`Car ${index}`} className="car-image" />
+              <img
+                src={`${import.meta.env.VITE_APILINK}${image}`} // ✅ Correct: Uses the stored path directly
+                alt={`Car ${index}`}
+                className="car-image"
+              />
+
             </div>
           ))}
         </Slider>
@@ -42,9 +47,9 @@ function CarCard({ car }) {
 
       <div className='card-desc'>
         <div className='card-desc-left'>
-          <h2 className='card-desc-left-text'>{car.company}</h2>
-          <h3 className='card-desc-left-text'>{car.model.length > 15 ? `${car.model.slice(0, 15)}...` : car.model}</h3>
-          <h3 className='card-desc-left-text'>{car.year}</h3>
+          <h2 className='card-desc-left-text'><b>{car.company}</b></h2>
+          <h3 className='card-desc-left-text'><b>{car.model.length > 15 ? `${car.model.slice(0, 15)}...` : car.model}</b></h3>
+          <h3 className='card-desc-left-text'><b>{car.year}</b></h3>
           <hr className='card-desc-left-hr' />
           <h4 className='card-desc-left-text'>
             {car.address?.length > 15 ? `${car.address.slice(0, 15)}...` : car.address || 'No Address'}
@@ -53,8 +58,8 @@ function CarCard({ car }) {
         </div>
 
         <div className='card-desc-right'>
-          <p className='card-desc-right-putatend'>{car.pricePerHour}/Hour</p>
-          <p className='card-desc-right-putatend'>{car.pricePerDay}/Day</p>
+          <p className='card-desc-right-putatend'><b>{car.pricePerHour}/Hour</b></p>
+          <p className='card-desc-right-putatend'><b>{car.pricePerDay}/Day</b></p>
         </div>
       </div>
     </div>

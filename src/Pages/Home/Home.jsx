@@ -15,23 +15,39 @@ function Home() {
 
     useEffect(() => {
         const fetchRandomCars = async () => {
+            setLoading(true);
             try {
-                setLoading(true);
-                const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/getRandomCars`, {
-                    encryptedToken: localStorage.getItem('selfsteerAuthToken'),
-                });
-                // Get any three random cars from the response
-                const randomCars = response.data.sort(() => 0.5 - Math.random()).slice(0, 3);
-                setCarsData(randomCars);
+                const oneHour = 60 * 60 * 1000;
+                const currentTime = Date.now();
+                let storedCars = JSON.parse(localStorage.getItem("randomcars"));
+                let storedTime = JSON.parse(localStorage.getItem("randomcarsTimestamp")) || 0;
+    
+                if (!storedCars || currentTime - storedTime > oneHour) {
+                    console.log("Fetching new car data...");
+                    const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/getRandomCars`, {
+                        encryptedToken: localStorage.getItem('selfsteerAuthToken'),
+                    });
+    
+                    storedCars = response.data.sort(() => 0.5 - Math.random()).slice(0, 3);
+                    localStorage.setItem("randomcars", JSON.stringify(storedCars));
+                    localStorage.setItem("randomcarsTimestamp", JSON.stringify(currentTime));
+                }
+    
+                setCarsData(Array.isArray(storedCars) ? storedCars : []);
             } catch (error) {
                 console.error('Error fetching cars:', error);
+                setCarsData([]);
             } finally {
                 setLoading(false);
             }
         };
-
+    
         fetchRandomCars();
-    }, []); // Empty dependency array to fetch data only on component mount
+    }, []);
+    
+    
+    
+    
 
     return (
         <>
