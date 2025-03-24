@@ -12,7 +12,7 @@ function Home() {
 
     const [carsData, setCarsData] = useState([]); // State to store car data
     const [loading, setLoading] = useState(false); // State to track loading status
-
+    
     useEffect(() => {
         const fetchRandomCars = async () => {
             setLoading(true);
@@ -23,12 +23,11 @@ function Home() {
                 let storedTime = JSON.parse(localStorage.getItem("randomcarsTimestamp")) || 0;
     
                 if (!storedCars || currentTime - storedTime > oneHour) {
-                    console.log("Fetching new car data...");
                     const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/getRandomCars`, {
                         encryptedToken: localStorage.getItem('selfsteerAuthToken'),
                     });
     
-                    storedCars = response.data.sort(() => 0.5 - Math.random()).slice(0, 3);
+                    storedCars = response.data.sort(() => 0.5 - Math.random()).slice(0, 3);                    
                     localStorage.setItem("randomcars", JSON.stringify(storedCars));
                     localStorage.setItem("randomcarsTimestamp", JSON.stringify(currentTime));
                 }

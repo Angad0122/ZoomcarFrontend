@@ -80,6 +80,11 @@ const CarDetailsForm = () => {
                 userData.carsProvided = [...(userData.carsProvided || []), response.data.car._id];
                 localStorage.setItem('userData', JSON.stringify(userData));
             }
+            const providedCarsData = JSON.parse(localStorage.getItem('ProvidedCarsData'))
+            if(providedCarsData){
+                providedCarsData.push(response.data.car)
+                localStorage.setItem('ProvidedCarsData', JSON.stringify(providedCarsData))
+            }
             alert('Car successfully uploaded');
 
             // Update isProvider status in the backend if necessary

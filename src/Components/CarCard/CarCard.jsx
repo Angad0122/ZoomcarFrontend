@@ -35,10 +35,12 @@ function CarCard({ car }) {
           {car.images.map((image, index) => (
             <div key={index}>
               <img
-                src={`${import.meta.env.VITE_APILINK}${image}`} // ✅ Correct: Uses the stored path directly
+                src={image.startsWith("http") ? image : `${import.meta.env.VITE_APILINK}${image}`} // Handles both cases
                 alt={`Car ${index}`}
                 className="car-image"
               />
+
+
 
             </div>
           ))}
