@@ -12,7 +12,7 @@ function Home() {
 
     const [carsData, setCarsData] = useState([]); // State to store car data
     const [loading, setLoading] = useState(false); // State to track loading status
-    
+
     useEffect(() => {
         const fetchRandomCars = async () => {
             setLoading(true);
@@ -21,17 +21,17 @@ function Home() {
                 const currentTime = Date.now();
                 let storedCars = JSON.parse(localStorage.getItem("randomcars"));
                 let storedTime = JSON.parse(localStorage.getItem("randomcarsTimestamp")) || 0;
-    
+
                 if (!storedCars || currentTime - storedTime > oneHour) {
                     const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/getRandomCars`, {
                         encryptedToken: localStorage.getItem('selfsteerAuthToken'),
                     });
-    
-                    storedCars = response.data.sort(() => 0.5 - Math.random()).slice(0, 3);                    
+
+                    storedCars = response.data.sort(() => 0.5 - Math.random()).slice(0, 3);
                     localStorage.setItem("randomcars", JSON.stringify(storedCars));
                     localStorage.setItem("randomcarsTimestamp", JSON.stringify(currentTime));
                 }
-    
+
                 setCarsData(Array.isArray(storedCars) ? storedCars : []);
             } catch (error) {
                 console.error('Error fetching cars:', error);
@@ -40,13 +40,13 @@ function Home() {
                 setLoading(false);
             }
         };
-    
+
         fetchRandomCars();
     }, []);
-    
-    
-    
-    
+
+
+
+
 
     return (
         <>
@@ -66,7 +66,7 @@ function Home() {
                         <p>Loading cars...</p>
                     ) : carsData.length > 0 ? (
                         carsData.map((car) => (
-                            <button onClick={(e) => navigate("/carDetails", { state: { car } })} key={car._id}>
+                            <button className='carCardContainerButton' onClick={(e) => navigate("/carDetails", { state: { car } })} key={car._id}>
                                 <CarCard key={car._id} car={car} />
                             </button>
                         ))
@@ -74,6 +74,7 @@ function Home() {
                         <p>No cars available.</p>
                     )}
                 </div>
+
                 <button className='browseAllCarsBtn'>
                     BROWSE ALL CARS
                 </button>

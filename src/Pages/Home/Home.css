@@ -1,9 +1,11 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow-x: hidden; /* Prevents horizontal overflow */
+    overflow-x: hidden;
+    /* Prevents horizontal overflow */
 }
 
 .homepage {
@@ -11,23 +13,30 @@ body, html {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    width: 100vw; /* Full width of the viewport */
-    height: 100vh; /* Full height of the viewport */
+    width: 100vw;
+    /* Full width of the viewport */
+    height: 100vh;
+    /* Full height of the viewport */
     display: flex;
     align-items: center;
-    justify-content: center; /* Centers content, if any, inside the homepage */
+    justify-content: center;
+    /* Centers content, if any, inside the homepage */
 }
 
 .headings {
-    font-size: 3vw; /* Responsive font size */
+    font-size: 3vw;
+    /* Responsive font size */
     color: aliceblue;
-    background-color: rgba(0, 0, 0, 0.5); /* Black with 50% transparency */
-    padding: 2rem; /* Adds some padding for better readability */
-    border-radius: 5px; /* Adds rounded corners */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Black with 50% transparency */
+    padding: 2rem;
+    /* Adds some padding for better readability */
+    border-radius: 5px;
+    /* Adds rounded corners */
     text-align: center;
 }
 
-.carcardsandheading{
+.carcardsandheading {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -37,20 +46,29 @@ body, html {
     padding-bottom: 5%;
 
 }
-.carsheading{
+
+.carsheading {
     font-size: 40px;
-    font-weight:500;
+    font-weight: 500;
     margin: 30px;
     color: #000;
 }
 
-.carCardContainer{
+.carCardContainer {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    gap: 20px;
+}
+.carCardContainerButton{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
 }
 
-.browseAllCarsBtn{
+.browseAllCarsBtn {
     background-color: #000000;
     color: #ffffff;
     font-weight: 600;
@@ -62,15 +80,53 @@ body, html {
 /* Media Queries for smaller screens */
 @media (max-width: 768px) {
     .headings {
-        font-size: 5vw; /* Increase font size slightly for better readability on smaller screens */
+        font-size: 5vw;
+        /* Increase font size slightly for better readability on smaller screens */
         padding: 0.75rem;
+    }
+
+    .carCardContainer {
+        flex-direction: column;
+        /* Stack items vertically */
+        align-items: center;
+        max-height: 400px;
+        /* Set a max height for scroll */
+        overflow-y: auto;
+        /* Enable vertical scrolling */
+        width: 90%;
     }
 }
 
 @media (max-width: 480px) {
+    .carsheading {
+        font-size: 20px;
+        font-weight: 500;
+        margin: 30px;
+        color: #000;
+    }
+
     .headings {
-        font-size: 7vw; /* Further increase font size for very small screens */
+        font-size: 7vw;
+        /* Further increase font size for very small screens */
         padding: 0.5rem;
     }
-}
 
+    .carCardContainer {
+        display: flex;
+        flex-direction: column;
+        /* Stack cards vertically */
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-height: 100%;
+    }
+
+    .carCard {
+        width: 90%;
+        /* Adjust width for better spacing */
+        max-width: 300px;
+        /* Optional: Prevents large cards */
+        margin-bottom: 15px;
+        /* Adds space between cards */
+    }
+}

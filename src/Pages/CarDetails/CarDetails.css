@@ -131,3 +131,77 @@
     border-radius: 10px;
 
 }
+
+@media (max-width: 768px) {
+    .carImagesContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .mainImage img {
+        width: 100%;
+        height: auto;
+    }
+
+    .thumbnailGallery {
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
+        width: 100%;
+        padding: 10px 0;
+        justify-content: start;
+        white-space: nowrap;
+    }
+
+    .thumbnailGallery img {
+        width: 120px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+
+    .extraImagesOverlay {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        padding: 5px 10px;
+    }
+
+    .carDetailsleftandrightpart {
+        flex-direction: row;
+        align-items:start;
+    }
+
+    .carInfo{
+        width: 100%;
+    }
+    .carDetailsrightside {
+        width: 50%;
+        align-items:flex-end;
+    }
+
+    .ratingbox {
+        font-size: 0.9em; /* Reduce font size */
+        width: 50%;
+        margin-top: 30%;
+    }
+
+    .rating {
+        font-size: 0.7em; /* Reduce font size */
+        padding: 3px 20px;
+        width: 100%;
+        justify-content: center;
+    }
+    .reviews{
+        font-size: 0.7em;
+    }
+
+    .deletebtn {
+        width: 50%; /* Reduce width */
+        font-size: 0.7em; /* Reduce text size */
+        padding: 5px;
+        margin-top: 5%;
+    }
+
+}

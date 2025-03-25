@@ -19,6 +19,10 @@
     height: 200px; /* Set a fixed height for the image container */
     overflow: hidden;
     position: relative;
+    height: auto; /* Maintains aspect ratio */
+    object-fit: cover; /* Prevents distortion */
+    max-width: 300px; /* Optional: Prevents it from getting too large */
+    display: block; /* Ensure it’s visible */
 }
 
 /* Style for the images in the slider */
@@ -173,7 +177,7 @@
 @media (max-width: 480px) {
     .card {
         width: 80%; /* Further reduce width */
-        height: 220px; /* Adjust height */
+        height: 250px; /* Adjust height */
     }
 
     .card-image {

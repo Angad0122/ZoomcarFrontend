@@ -72,7 +72,7 @@ function CarDetails() {
 
                 alert("Car deleted successfully");
                 console.log(response.data.message);
-                
+
                 setDeleting(false)
                 navigate(-1); // Redirect after successful deletion
             }
@@ -143,7 +143,7 @@ function CarDetails() {
                                         <div className='ratingbox'>
                                             <p className='rating'> {averageRating} <IoIosStar className='ratingstar' />
                                             </p>
-                                            <p>{car.ratings.length} Reviews</p>
+                                            <p className='reviews'>{car.ratings.length} Reviews</p>
                                         </div>
                                         {(car.providerEmailId === userEmail || userEmail == import.meta.env.VITE_SELFSTEERADMINEMAIL) && (
                                             <>
