@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './SigninSignup.css';
 import { useUser } from '../../Contexts/AuthContext';
 
 function SigninSignup() {
-
     const { userId, setUserId, name, setName, userEmail,userRole,setUserRole, setUserEmail, phone, setPhone, city, setCity, gender, setGender, isProvider, setIsProvider,
         carsProvided, setCarsProvided, logout } = useUser()
 
@@ -85,6 +84,11 @@ function SigninSignup() {
                 setEmail(formData.email);
                 setOtpOpen(true);
             } catch (error) {
+                if (error.response && error.response.status === 400) {
+                    alert(error.response.data.error || "Email already in use by another user");
+                } else {
+                    alert("Error adding car");
+                }
                 console.error("There was an error requesting OTP!", error);
             } finally {
                 setIsSubmitting(false);
@@ -93,69 +97,7 @@ function SigninSignup() {
     };
 
 
-const handleLoginSubmit = async (event) => {
-    event.preventDefault();
-
-    const formData = {
-        email: event.target.exampleInputEmail1.value,
-        password: event.target.exampleInputPassword1.value,
-    };
-
-    const errors = validateLogin(formData);
-    setFormErrors(errors);
-
-    if (Object.keys(errors).length === 0) {
-        setIsSubmitting(true);
-        try {
-            const response = await axios.post(`${import.meta.env.VITE_APILINK}/auth/login`, formData, {
-                withCredentials: true,
-            });
-
-            // Check if logged in as Admin
-            if (response.data.message === "Logged in as Admin") {
-                const token = response.data.encryptedToken;
-                setName(response.data.name)
-                setUserEmail(response.data.email)
-                setUserId(response.data.userId)
-                setUserRole(response.data.userRole)
-                const adminData = {
-                    name: response.data.name,
-                    userEmail: response.data.email,
-                    userId: response.data.userId,
-                    userRole: response.data.userRole
-                }
-                // Save userData and token to localStorage
-                console.log(adminData, token);
-                localStorage.setItem("adminToken", token); // Save admin token if needed
-                localStorage.setItem('userData', JSON.stringify(adminData)); // Serialize the userData object
-                navigate("/admin"); // Navigate to Admin panel
-            } else {
-                // User login workflow
-                setEmail(formData.email);
-                setLoginOtp(true);
-                setOtpOpen(true);
-            }
-        } catch (error) {
-            console.error("Error during login:", error);
-
-            if (error.response && error.response.data && error.response.data.error) {
-                alert(error.response.data.error);
-            } else if (error.response) {
-                alert(`Error: ${error.response.status} - ${error.response.statusText}`);
-            } else {
-                alert("An unexpected error occurred. Please try again later.");
-                console.log(error);
-            }
-        } finally {
-            setIsSubmitting(false);
-        }
-    }
-};
-
-    
-
-
-    const handleOtpSubmit = async (event) => {
+    const handleSignupOtpSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await axios.post(`${import.meta.env.VITE_APILINK}/auth/verify-otp`, { email, otp }, {
@@ -173,7 +115,8 @@ const handleLoginSubmit = async (event) => {
                     phone: response.data.newUser.phone,
                     city: response.data.newUser.city,
                     gender: response.data.newUser.gender,
-                    isProvider: response.data.newUser.isProvider
+                    userRole: response.data.newUser.userRole,
+                    isProvider: response.data.newUser.isProvider,
                 };
     
                 // Save userData and token to localStorage
@@ -185,14 +128,80 @@ const handleLoginSubmit = async (event) => {
             setUserEmail(response.data.newUser.email)
             setPhone(response.data.newUser.phone)
             setCity(response.data.newUser.city)
+            setUserRole(response.data.newUser.userRole)
             setGender(response.data.newUser.gender)
             setIsProvider(response.data.newUser.isProvider)
+            console.log( "Data log from handleSignUpOtp ", userId,name,userEmail,phone,isProvider, userRole, gender,city);
+            
             navigate('/')
         } catch (error) {
             console.error("There was an error verifying OTP!", error);
             setOtpErrors({ otp: 'Invalid or expired OTP' });
         }
     };
+
+
+
+    const handleLoginSubmit = async (event) => {
+        event.preventDefault();
+    
+        const formData = {
+            email: event.target.exampleInputEmail1.value,
+            password: event.target.exampleInputPassword1.value,
+        };
+    
+        const errors = validateLogin(formData);
+        setFormErrors(errors);
+    
+        if (Object.keys(errors).length === 0) {
+            setIsSubmitting(true);
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_APILINK}/auth/login`, formData, {
+                    withCredentials: true,
+                });
+    
+                // Check if logged in as Admin
+                if (response.data.message === "Logged in as Admin") {
+                    const token = response.data.encryptedToken;
+                    setName(response.data.name)
+                    setUserEmail(response.data.email)
+                    setUserId(response.data.userId)
+                    setUserRole(response.data.userRole)
+                    const adminData = {
+                        name: response.data.name,
+                        userEmail: response.data.email,
+                        userId: response.data.userId,
+                        userRole: response.data.userRole
+                    }
+                    // Save userData and token to localStorage
+                    console.log(adminData, token);
+                    localStorage.setItem("adminToken", token); // Save admin token if needed
+                    localStorage.setItem('userData', JSON.stringify(adminData)); // Serialize the userData object
+                    navigate("/admin"); // Navigate to Admin panel
+                } else {
+                    // User login workflow
+                    setEmail(formData.email);
+                    setLoginOtp(true);
+                    setOtpOpen(true);
+                }
+            } catch (error) {
+                console.error("Error during login:", error);
+    
+                if (error.response && error.response.data && error.response.data.error) {
+                    alert(error.response.data.error);
+                } else if (error.response) {
+                    alert(`Error: ${error.response.status} - ${error.response.statusText}`);
+                } else {
+                    alert("An unexpected error occurred. Please try again later.");
+                    console.log(error);
+                }
+            } finally {
+                setIsSubmitting(false);
+            }
+        }
+    };
+
+
     const handleLoginOtpSubmit = async (event) => {
         event.preventDefault();
     
@@ -212,11 +221,11 @@ const handleLoginSubmit = async (event) => {
                     name: response.data.name,
                     userEmail: response.data.userEmail,
                     phone: response.data.phone,
+                    userRole:response.data.userRole,
                     city: response.data.city,
                     gender: response.data.gender,
                     isProvider: response.data.isProvider,
                     carsProvided:response.data.carsProvided,
-                    userRole:response.data.userRole
                 };
     
                 // Save userData and token to localStorage
@@ -230,20 +239,26 @@ const handleLoginSubmit = async (event) => {
             setUserEmail(response.data.userEmail);
             setPhone(response.data.phone);
             setCity(response.data.city);
+            setUserRole(response.data.userRole)
             setGender(response.data.gender);
             setIsProvider(response.data.isProvider);
             setCarsProvided(response.data.carsProvided)
-            console.log(response.data.message, name, userEmail, userRole, phone, city, gender, isProvider);
-
-    
+            
+            console.log("State updated? ", response.data.name, response.data.userId, response.data.userEmail,response.data.isProvider);
+            
             // Navigate to the home page or dashboard after successful login
             navigate('/');
-    
-    
+            console.log("data after login ",name, userId, userEmail, userRole, phone, city, gender, isProvider);
+            
+            
         } catch (error) {
             setOtpErrors({ otp: 'Invalid or expired OTP' });
         }
     };
+    
+    useEffect(() => {
+        console.log("Updated data after login:", name, userId, userEmail, userRole, phone, city, gender, isProvider);
+    }, [userId, name, userEmail, userRole, phone, city, gender, isProvider]);
     
 
 
@@ -271,7 +286,7 @@ const handleLoginSubmit = async (event) => {
                         </>
                     ) : (
                         <>
-                            <form className='loginsignupform' onSubmit={handleOtpSubmit}>
+                            <form className='loginsignupform' onSubmit={handleSignupOtpSubmit}>
                                 <h2 className='loginsignupheading'>Enter OTP</h2>
                                 <div className="mb-3">
                                     <label htmlFor="otp" className="form-label text-black">OTP</label>

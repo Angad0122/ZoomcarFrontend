@@ -14,6 +14,7 @@ function ProviderPanel() {
     const [selectedOption, setSelectedOption] = useState('YourCars');
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Check if the screen is mobile-sized
     const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+    const [logoutconfirmation, setLogoutconfirmation] = useState(false)
 
     const navigate = useNavigate();
 
@@ -41,6 +42,7 @@ function ProviderPanel() {
     }, [name, navigate, selectedOption]);
 
     const logoutandgotohome = () => {
+        setLogoutconfirmation(false)
         logout();
         navigate('/');
     };
@@ -115,7 +117,7 @@ function ProviderPanel() {
                                 Earnings
                             </button>
                             <hr />
-                            <button className='text-black font-bold' onClick={() => logoutandgotohome()}>
+                            <button className='text-black font-bold' onClick={() => setLogoutconfirmation(true)}>
                                 <div className='logoutbuttonandlogo'>
                                     <MdExitToApp className='logoutlogo' /> Logout
                                 </div>
@@ -131,7 +133,25 @@ function ProviderPanel() {
                     {selectedOption === 'Earnings' && <div>Earnings</div>}
                 </div>
             </div>
-
+            {logoutconfirmation && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <p className="text-lg mb-4 font-semibold ">Do you want to logout</p>
+                        <button
+                            onClick={() => setLogoutconfirmation(false)}
+                            className="bg-green-500 text-white mr-2 px-4 py-2 rounded"
+                        >
+                            <b>Cancel</b>
+                        </button>
+                        <button
+                            onClick={() => logoutandgotohome(false)}
+                            className="bg-red-500 text-white ml-2 px-4 py-2 rounded"
+                        >
+                            <b>Logout</b>
+                        </button>
+                    </div>
+                </div>
+            )}
         </>
     )
 }

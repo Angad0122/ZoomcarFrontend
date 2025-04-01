@@ -44,6 +44,10 @@
 .user-info p {
     margin: 2px 0;
     font-weight: 700;
+    max-width: 90%;  /* Adjust this based on your layout */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-info img {

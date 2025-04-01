@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './AddCar.css';
 import { useUser } from '../../Contexts/AuthContext';
 
 const CarDetailsForm = () => {
-    const { userId, userEmail, name,isProvider, setIsProvider, setCarsProvided } = useUser();
+    const { userId, userEmail, name, phone, userRole, setIsProvider, setCarsProvided, city, gender } = useUser();
+    let {isProvider} = useUser()
     const [carDetails, setCarDetails] = useState({
         company: '', model: '', year: '', pricePerHour: '', pricePerDay: '', city: '', address: '',
         registrationNumber: '', availability: true, carType: '', transmissionType: '', fuelType: '', seats: ''
@@ -12,7 +13,12 @@ const CarDetailsForm = () => {
     const [images, setImages] = useState([]);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+    const [successOverlay, setSuccessOverlay] = useState(false)
 
+    useEffect(() => {
+        // Simulate loading time
+        console.log("logging Context data from AddCar.jsx ", userId, name, userEmail, phone, isProvider, userRole, city, gender);
+    }, []);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCarDetails((prevDetails) => ({
@@ -45,6 +51,15 @@ const CarDetailsForm = () => {
             return;
         }
     
+        // Validate Image Types
+        const allowedExtensions = ["image/jpeg", "image/jpg", "image/png"];
+        for (const file of images) {
+            if (!allowedExtensions.includes(file.type)) {
+                alert("Only JPG, JPEG, or PNG images are allowed.");
+                return;
+            }
+        }
+    
         // Get the already encrypted token from Local Storage
         const encryptedToken = localStorage.getItem('selfsteerAuthToken');
         if (!encryptedToken) {
@@ -61,11 +76,10 @@ const CarDetailsForm = () => {
         formData.append('name', name);
     
         try {
-    
             const response = await axios.post(`${import.meta.env.VITE_APILINK}/car/addcar`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${encryptedToken}` // 🔥 Send the token in headers
+                    'Authorization': `Bearer ${encryptedToken}`
                 },
                 onUploadProgress: (progressEvent) => {
                     setUploadProgress(Math.round((progressEvent.loaded * 100) / progressEvent.total));
@@ -73,54 +87,65 @@ const CarDetailsForm = () => {
             });
     
             setCarsProvided(prevCars => [...prevCars, response.data.car._id]);
-
+    
             // Update userData.carsProvided in localStorage
             const userData = JSON.parse(localStorage.getItem('userData'));
             if (userData) {
+                isProvider = userData.isProvider;
+                if (!isProvider) {
+                    const token = localStorage.getItem('selfsteerAuthToken');
+                    await axios.post(
+                        `${import.meta.env.VITE_APILINK}/user/changeIsProvider`,
+                        { email: userEmail },
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    setIsProvider(true);
+                }
                 userData.carsProvided = [...(userData.carsProvided || []), response.data.car._id];
+                userData.isProvider = true;
+                userData.userRole = 'provider';
                 localStorage.setItem('userData', JSON.stringify(userData));
             }
-            const providedCarsData = JSON.parse(localStorage.getItem('ProvidedCarsData'))
-            if(providedCarsData){
-                providedCarsData.push(response.data.car)
-                localStorage.setItem('ProvidedCarsData', JSON.stringify(providedCarsData))
+    
+            const providedCarsData = JSON.parse(localStorage.getItem('ProvidedCarsData'));
+            if (providedCarsData) {
+                providedCarsData.push(response.data.car);
+                localStorage.setItem('ProvidedCarsData', JSON.stringify(providedCarsData));
             }
-            alert('Car successfully uploaded');
-
-            // Update isProvider status in the backend if necessary
-            if (!isProvider) {
-                const token = localStorage.getItem('selfsteerAuthToken');
-                await axios.post(
-                    `${import.meta.env.VITE_APILINK}/user/changeIsProvider`,
-                    { email: userEmail,
-                      encryptedToken :token
-                    },
-                    
-                );
-            }
-            setIsProvider(true);
+    
             // Reset form fields
             setCarDetails({ company: '', model: '', year: '', pricePerHour: '', pricePerDay: '', city: '', address: '', registrationNumber: '', availability: true, carType: '', transmissionType: '', fuelType: '', seats: '' });
             setImages([]);
             setUploadProgress(0);
+            setTimeout(() => {
+                setSuccessOverlay(true);
+            }, 300);
         } catch (error) {
             console.error("Error adding car:", error);
-            alert("Error adding car");
+        
+            if (error.response && error.response.status === 400) {
+                alert(error.response.data.error || "Bad request: This car already exists");
+            } else {
+                alert("Error adding car");
+            }
+        
             setUploadProgress(0);
         }
+        
     };
     
-    
-    
 
-    
- 
+
+
+
+
+
     return (
         <div className="form-container">
             <div className='addcarheadingdiv'>
                 <h1 className='addcarheading'>Add a New Car</h1>
             </div>
-            <form onSubmit={handleCarSubmit}>                
+            <form onSubmit={handleCarSubmit}>
                 <div className="form-group-row">
                     <div className="form-group">
                         <label>Company:</label>
@@ -234,7 +259,7 @@ const CarDetailsForm = () => {
                 </div>
 
                 <div className="form-group-row">
-                    
+
                     <div className="form-group">
                         <label>City Name:</label>
                         <input
@@ -326,6 +351,20 @@ const CarDetailsForm = () => {
                     </button>
                 </div>
             </form>
+            {successOverlay && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <p className="text-lg font-semibold ">The car is uploaded and is</p>
+                        <p className="text-lg font-semibold mb-4"> under confirmation process!</p>
+                        <button
+                            onClick={() => setSuccessOverlay(false)}
+                            className="bg-green-500 text-white px-4 py-2 rounded"
+                        >
+                            Okay
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
